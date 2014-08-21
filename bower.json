@@ -1,0 +1,21 @@
+{
+  "name": "schedule_site",
+  "version": "0.0.0",
+  "authors": [
+    "Mariana <mbravo@thoughtworks.com>"
+  ],
+  "description": "App to create conference schedules",
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "vendor/assets/components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "~1.2.22"
+  }
+}
