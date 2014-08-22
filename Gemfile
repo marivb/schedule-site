@@ -13,4 +13,5 @@ group :development, :test do
   gem 'spring-commands-rspec'
   gem 'slim-rails'
   gem 'rspec-rails', '~> 3.0.0'
+  gem 'database_cleaner', '~> 1.3.0'
 end

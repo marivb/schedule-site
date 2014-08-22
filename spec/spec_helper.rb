@@ -52,16 +52,6 @@ RSpec.configure do |config|
   # as the one that triggered the failure.
   Kernel.srand config.seed
 
-  # rspec-expectations config goes here. You can use an alternate
-  # assertion/expectation library such as wrong or the stdlib/minitest
-  # assertions if you prefer.
-  config.expect_with :rspec do |expectations|
-    # Enable only the newer, non-monkey-patching expect syntax.
-    # For more details, see:
-    #   - http://myronmars.to/n/dev-blog/2012/06/rspecs-new-expectation-syntax
-    expectations.syntax = :expect
-  end
-
   # rspec-mocks config goes here. You can use an alternate test double
   # library (such as bogus or mocha) by changing the `mock_with` option here.
   config.mock_with :rspec do |mocks|
@@ -75,4 +65,8 @@ RSpec.configure do |config|
     mocks.verify_partial_doubles = true
   end
 =end
+
+  config.expect_with :rspec do |expectations|
+    expectations.syntax = :expect
+  end
 end
