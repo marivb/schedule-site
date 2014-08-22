@@ -34,4 +34,16 @@ describe Types::ScheduleTime do
       expect(Types::ScheduleTime.evolve(6.hours)).to eq(6 * 60 * 60)
     end
   end
+
+  describe '#until' do
+    it 'should range until given time by steps of given interval in minutes' do
+      start_time = Types::ScheduleTime.new 6.hours
+      end_time = Types::ScheduleTime.new 7.hours
+      expect(start_time.until(end_time, 15)).to eq([6.hours,
+                                                    6.hours + 15.minutes,
+                                                    6.hours + 30.minutes,
+                                                    6.hours + 45.minutes
+      ])
+    end
+  end
 end

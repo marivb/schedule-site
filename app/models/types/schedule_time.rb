@@ -9,6 +9,10 @@ class Types::ScheduleTime
     @duration.to_i
   end
 
+  def until(time, interval = 1.minute)
+    (@duration...time.duration).step(interval.minutes).to_a
+  end
+
   class << self
 
     def demongoize(object)

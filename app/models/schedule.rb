@@ -6,4 +6,11 @@ class Schedule
   field :start_time, type: Types::ScheduleTime
   field :end_time, type: Types::ScheduleTime
   field :slot_interval, type: Integer
+
+  def times
+    start_time.until(end_time, slot_interval).map do |time|
+      formatable_time = Time.now.beginning_of_day + time
+      formatable_time.strftime('%H:%M')
+    end
+  end
 end

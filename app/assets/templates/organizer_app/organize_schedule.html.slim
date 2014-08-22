@@ -1,3 +1,14 @@
-h1 Hello
-p
+h1
   | {{schedule.name}}
+
+/ table table-bordered
+table
+  thead
+    tr
+      td Time
+      td Room
+  tbody
+    tr ng-repeat='time in schedule.times'
+      td
+        | {{time}}
+      td blank
