@@ -29,5 +29,9 @@ module ScheduleSite
 
     # Adds bower components into the asset pipeline
     config.assets.paths << Rails.root.join('vendor', 'assets', 'components')
+
+    # Precompile additional assets.
+    # application.js, application.css, and all non-JS/CSS in app/assets folder are already added.
+    config.assets.precompile += %w( organizer_app.js )
   end
 end
