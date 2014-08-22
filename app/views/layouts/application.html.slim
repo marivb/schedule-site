@@ -1,11 +1,8 @@
 doctype 5
-html ng-app="myApp"
+html
   head
     title Conference Schedule
-    = stylesheet_link_tag 'application', media: 'all'
-    = javascript_include_tag 'application'
     = csrf_meta_tags
 
   body
-    | {{'Hello ' + 'You!'}}
     = yield
