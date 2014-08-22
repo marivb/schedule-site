@@ -1,0 +1,15 @@
+app = angular.module('organizerApp', ['ngRoute'])
+app.config [
+  '$routeProvider',
+  ($routeProvider) ->
+    $routeProvider
+      .when('/schedules/new',
+        templateUrl: "<%= asset_path('organizer_app/new_schedule.html') %>"
+        controller: 'NewScheduleController'
+      ).otherwise(redirectTo: '/schedules/new')
+]
+
+app.controller 'NewScheduleController', [
+  '$scope'
+  ($scope) ->
+]

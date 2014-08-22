@@ -33,5 +33,8 @@ module ScheduleSite
     # Precompile additional assets.
     # application.js, application.css, and all non-JS/CSS in app/assets folder are already added.
     config.assets.precompile += %w( organizer_app.js )
+
+    # Allows Slim templates served as assets
+    Rails.application.assets.register_engine('.slim', Slim::Template)
   end
 end
