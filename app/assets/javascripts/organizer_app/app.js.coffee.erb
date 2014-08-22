@@ -1,15 +1,23 @@
-app = angular.module('organizerApp', ['ngRoute'])
+app = angular.module('organizerApp', ['ngRoute', 'ngResource'])
+
 app.config [
   '$routeProvider',
   ($routeProvider) ->
     $routeProvider
-      .when('/schedules/new',
-        templateUrl: "<%= asset_path('organizer_app/new_schedule.html') %>"
-        controller: 'NewScheduleController'
-      ).otherwise(redirectTo: '/schedules/new')
+      .when('/schedules/:scheduleId',
+        templateUrl: "<%= asset_path('organizer_app/organize_schedule.html') %>"
+        controller: 'OrganizeScheduleCtrl'
+      )
 ]
 
-app.controller 'NewScheduleController', [
-  '$scope'
-  ($scope) ->
+app.factory 'Schedule', [
+  '$resource',
+  ($resource) ->
+    $resource('/api/schedules/:id')
+]
+
+app.controller 'OrganizeScheduleCtrl', [
+  '$scope', '$routeParams', 'Schedule',
+  ($scope, $routeParams, Schedule) ->
+    $scope.schedule = Schedule.get(id: $routeParams.scheduleId)
 ]
