@@ -1,11 +1,10 @@
 h1
   | {{schedule.name}}
 
-/ table table-bordered
-table
+table.table.table-bordered
   thead
     tr
-      td Time
+      td.col-sm-1 Time
       td Room
   tbody
     tr ng-repeat='time in schedule.times'

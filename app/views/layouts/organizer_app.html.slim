@@ -2,8 +2,11 @@ doctype 5
 html ng-app='organizerApp'
   head
     title Conference Schedule Organizer
-    = javascript_include_tag 'organizer_app'
+    = stylesheet_link_tag :organizer_app, media: 'all'
+    = javascript_include_tag :organizer_app
     = csrf_meta_tags
 
   body
-    = yield
+    .container
+      .row
+        div ng-view=true
