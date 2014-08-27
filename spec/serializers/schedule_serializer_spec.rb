@@ -1,11 +1,6 @@
 describe ScheduleSerializer do
   before :each do
-    @schedule = Schedule.create(
-      name: 'A Name',
-      start_time: 9.hours,
-      end_time: 10.hours,
-      slot_interval: 10
-    )
+    @schedule = FactoryGirl.create :schedule
     @json = ScheduleSerializer.new(@schedule, root: false).to_json
   end
 

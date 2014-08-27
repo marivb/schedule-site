@@ -26,5 +26,5 @@ RSpec.configure do |config|
   end
 
   config.infer_spec_type_from_file_location!
-  config.include Requests::JsonHelpers, type: :request
+  config.include JsonHelpers
 end

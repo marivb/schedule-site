@@ -4,6 +4,8 @@ Rails.application.routes.draw do
   get '/organizer' => 'organizer_app#home'
 
   namespace :api, defaults: {format: :json} do
-    resources :schedules, only: [:show]
+    resources :schedules, only: [:show] do
+      resources :sessions, only: [:create]
+    end
   end
 end
