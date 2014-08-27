@@ -7,6 +7,8 @@ class Schedule
   field :end_time, type: Types::ScheduleTime
   field :slot_interval, type: Integer
 
+  has_many :sessions, validate: false
+
   def times
     start_time.until(end_time, slot_interval).map do |time|
       formatable_time = Time.now.beginning_of_day + time
