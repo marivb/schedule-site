@@ -1,3 +1,4 @@
+#= require jquery/dist/jquery
 #= require bootstrap-sprockets
 #= require angular/angular
 #= require angular-route/angular-route
