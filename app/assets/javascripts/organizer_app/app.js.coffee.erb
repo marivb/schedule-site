@@ -1,13 +1,20 @@
 app = angular.module('organizerApp', ['ngRoute', 'ngResource'])
 
 app.config [
-  '$routeProvider',
-  ($routeProvider) ->
+  '$routeProvider', '$httpProvider',
+  ($routeProvider, $httpProvider) ->
     $routeProvider
       .when('/schedules/:scheduleId',
         templateUrl: "<%= asset_path('organizer_app/organize_schedule.html') %>"
         controller: 'OrganizeScheduleCtrl'
       )
+      .when('/schedules/:scheduleId/sessions/new',
+        templateUrl: "<%= asset_path('organizer_app/new_session.html') %>"
+        controller: 'NewSessionCtrl'
+      )
+
+    authToken = $("meta[name=\"csrf-token\"]").attr("content")
+    $httpProvider.defaults.headers.common["X-CSRF-TOKEN"] = authToken
 ]
 
 app.factory 'Schedule', [
@@ -16,8 +23,25 @@ app.factory 'Schedule', [
     $resource('/api/schedules/:id')
 ]
 
+app.factory 'Session', [
+  '$resource',
+  ($resource) ->
+    $resource('/api/schedules/:scheduleId/sessions/:sessionId',
+        {scheduleId: '@scheduleId', sessionId: '@id'})
+]
+
 app.controller 'OrganizeScheduleCtrl', [
   '$scope', '$routeParams', 'Schedule',
   ($scope, $routeParams, Schedule) ->
     $scope.schedule = Schedule.get(id: $routeParams.scheduleId)
+]
+
+app.controller 'NewSessionCtrl', [
+  '$scope', '$routeParams', 'Session',
+  ($scope, $routeParams, Session) ->
+    $scope.session = new Session({scheduleId: $routeParams.scheduleId})
+
+    $scope.createSession = ->
+      $scope.session.$save ->
+        $scope.session.title = ''
 ]
