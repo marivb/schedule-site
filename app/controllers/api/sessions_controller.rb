@@ -1,4 +1,9 @@
 class Api::SessionsController < ApplicationController
+  def index
+    sessions = Session.where(schedule_id: params[:schedule_id])
+    render json: sessions, root: false
+  end
+
   def create
     schedule = Schedule.find params[:schedule_id]
     session = schedule.sessions.build params.permit(:title)

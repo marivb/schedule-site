@@ -1,5 +1,5 @@
 class SessionSerializer < ActiveModel::Serializer
-  attributes :id
+  attributes :id, :title
 
   def id
     object.id.to_s
