@@ -1,17 +1,21 @@
 h1
   | {{schedule.name}}
 
-p
-  a.btn-link href='#/schedules/{{schedule.id}}/sessions/new'
+.col-md-3
+  ul
+    li ng-repeat='session in sessions'
+      | {{session.title}}
+  a.btn-link ng-click='newSession()'
     | Add Session
 
-table.table.table-bordered
-  thead
-    tr
-      td.col-sm-1 Time
-      td Room
-  tbody
-    tr ng-repeat='time in schedule.times'
-      td
-        | {{time}}
-      td blank
+.col-md-9
+  table.table.table-bordered
+    thead
+      tr
+        td.col-sm-1 Time
+        td Room
+    tbody
+      tr ng-repeat='time in schedule.times'
+        td
+          | {{time}}
+        td blank

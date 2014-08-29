@@ -8,10 +8,6 @@ app.config [
         templateUrl: "<%= asset_path('organizer_app/organize_schedule.html') %>"
         controller: 'OrganizeScheduleCtrl'
       )
-      .when('/schedules/:scheduleId/sessions/new',
-        templateUrl: "<%= asset_path('organizer_app/new_session.html') %>"
-        controller: 'NewSessionCtrl'
-      )
 
     authToken = $("meta[name=\"csrf-token\"]").attr("content")
     $httpProvider.defaults.headers.common["X-CSRF-TOKEN"] = authToken
@@ -31,17 +27,32 @@ app.factory 'Session', [
 ]
 
 app.controller 'OrganizeScheduleCtrl', [
-  '$scope', '$routeParams', 'Schedule',
-  ($scope, $routeParams, Schedule) ->
+  '$scope', '$routeParams', '$modal', 'Schedule', 'Session',
+  ($scope, $routeParams, $modal, Schedule, Session) ->
     $scope.schedule = Schedule.get(id: $routeParams.scheduleId)
+    $scope.sessions = Session.query {scheduleId: $routeParams.scheduleId}, ->
+
+    $scope.newSession = ->
+      modalInstance = $modal.open(
+        templateUrl: "<%= asset_path('organizer_app/new_session.html') %>"
+        controller: 'NewSessionCtrl'
+        scope: $scope
+      )
+      modalInstance.result.then (session) ->
+        $scope.sessions.push session
 ]
 
 app.controller 'NewSessionCtrl', [
-  '$scope', '$routeParams', 'Session',
-  ($scope, $routeParams, Session) ->
-    $scope.session = new Session({scheduleId: $routeParams.scheduleId})
+  '$scope', '$modalInstance', 'Session',
+  ($scope, $modalInstance, Session) ->
+    $scope.session = new Session({scheduleId: $scope.schedule.id})
 
     $scope.createSession = ->
       $scope.session.$save ->
-        $scope.session.title = ''
+        session = $scope.session
+        $scope.session = undefined
+        $modalInstance.close(session)
+
+    $scope.cancel = ->
+      $modalInstance.dismiss('cancel')
 ]
