@@ -1,4 +1,6 @@
-# Conference Schedule System [![Build Status](https://snap-ci.com/marivb/schedule-site/branch/master/build_image)](https://snap-ci.com/marivb/schedule-site/branch/master)
+# Conference Schedule System
+
+[![Build Status](https://snap-ci.com/marivb/schedule-site/branch/master/build_image)](https://snap-ci.com/marivb/schedule-site/branch/master)
 
 This is an open-source conference schedule system, currently in development. It uses Rails and AngularJS.
 
