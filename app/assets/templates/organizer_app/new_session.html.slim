@@ -7,6 +7,10 @@ form name='sessionForm' ng-submit='createSession()'
       label for='session_title' Title
       input.form-control id='session_title' ng-model='session.title' type='text'
 
+    .form-group
+      label for='session_duration' Duration
+      input.form-control id='session_duration' ng-model='session.duration' type='text'
+
   .modal-footer
     button.btn.btn-primary type='submit' Submit
     .btn.btn-default ng-click='cancel()' Cancel

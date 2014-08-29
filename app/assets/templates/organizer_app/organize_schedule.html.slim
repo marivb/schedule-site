@@ -4,7 +4,7 @@ h1
 .col-md-3
   ul
     li ng-repeat='session in sessions'
-      | {{session.title}}
+      | {{session.title}} - {{session.duration}}
   a.btn-link ng-click='newSession()'
     | Add Session
 
