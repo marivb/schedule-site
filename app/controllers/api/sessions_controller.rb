@@ -6,7 +6,7 @@ class Api::SessionsController < ApplicationController
 
   def create
     schedule = Schedule.find params[:schedule_id]
-    session = schedule.sessions.build params.permit(:title)
+    session = schedule.sessions.build params.permit(:title, :duration)
     if session.save
       render json: session, status: :ok, root: false
     else

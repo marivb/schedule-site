@@ -5,13 +5,14 @@ describe Api::SessionsController, type: :controller do
     context 'valid session' do
       before :each do
         @attributes = FactoryGirl.attributes_for :session
-        @schedule_id = @attributes[:schedule_id]
 
         post :create, @attributes
+
+        @created_session = Session.first
       end
 
       it 'creates a session' do
-        expect(Session.where(schedule_id: @schedule_id).count).to eq(1)
+        expect(@created_session).to_not be_nil
       end
 
       it 'returns ok status' do
@@ -19,8 +20,19 @@ describe Api::SessionsController, type: :controller do
       end
 
       it 'returns session json' do
-        session = Session.where(schedule_id: @schedule_id).first
-        expect(json['id']).to eq(session.id.to_s)
+        expect(json['id']).to eq(@created_session.id.to_s)
+      end
+
+      it 'saves title' do
+        expect(@created_session.title).to eq(@attributes[:title])
+      end
+
+      it 'saves duration' do
+        expect(@created_session.duration).to eq(@attributes[:duration])
+      end
+
+      it 'saves schedule_id' do
+        expect(@created_session.schedule_id).to eq(@attributes[:schedule_id])
       end
     end
 

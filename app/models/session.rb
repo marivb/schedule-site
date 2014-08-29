@@ -3,6 +3,7 @@ class Session
   include Mongoid::Timestamps
 
   field :title
+  field :duration, type: Integer
 
   belongs_to :schedule
 
