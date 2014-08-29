@@ -24,5 +24,26 @@ describe Session do
         expect(session).to_not be_valid
       end
     end
+
+    context 'no duration' do
+      it 'is not valid' do
+        session = Session.new @valid_attributes.merge(duration: '')
+        expect(session).to_not be_valid
+      end
+    end
+
+    context 'non-integer duration' do
+      it 'is not valid' do
+        session = Session.new @valid_attributes.merge(duration: 10.5)
+        expect(session).to_not be_valid
+      end
+    end
+
+    context 'non-positive duration' do
+      it 'is not valid' do
+        session = Session.new @valid_attributes.merge(duration: 0)
+        expect(session).to_not be_valid
+      end
+    end
   end
 end

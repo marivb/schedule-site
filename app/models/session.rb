@@ -7,5 +7,7 @@ class Session
 
   belongs_to :schedule
 
-  validates_presence_of :title, :schedule_id
+  validates :title, presence: true
+  validates :duration, presence: true, numericality: {greater_than: 0, only_integer: true}
+  validates :schedule_id, presence: true
 end
