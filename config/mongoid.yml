@@ -63,13 +63,15 @@ test:
         - localhost:27017
       options:
         read: primary
-        # In the test environment we lower the retries and retry interval to
+        # in the test environment we lower the retries and retry interval to
         # low amounts for fast failures.
         max_retries: 1
         retry_interval: 0
 
 production:
-  uri: <%= ENV['MONGOHQ_URL'] %>
-  max_retries_on_connection_failure: 20
-  persist_in_safe_mode: true
-  skip_version_check: true
+  sessions:
+    default:
+      uri: <%= ENV['MONGOHQ_URL'] %>
+      options:
+        skip_version_check: true
+        safe: true
