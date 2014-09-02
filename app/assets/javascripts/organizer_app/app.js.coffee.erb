@@ -1,14 +1,8 @@
-app = angular.module('organizerApp', ['ngRoute', 'ngResource', 'ui.bootstrap'])
+app = angular.module('organizerApp', ['ngResource', 'ui.bootstrap'])
 
 app.config [
-  '$routeProvider', '$httpProvider',
-  ($routeProvider, $httpProvider) ->
-    $routeProvider
-      .when('/schedules/:scheduleId',
-        templateUrl: '<%= asset_path('organizer_app/organize_schedule.html') %>'
-        controller: 'OrganizeScheduleCtrl'
-      )
-
+  '$httpProvider',
+  ($httpProvider) ->
     authToken = $('meta[name="csrf-token"]').attr('content')
     $httpProvider.defaults.headers.common['X-CSRF-TOKEN'] = authToken
 ]
@@ -27,15 +21,16 @@ app.factory 'Session', [
 ]
 
 app.controller 'OrganizeScheduleCtrl', [
-  '$scope', '$routeParams', '$modal', 'Schedule', 'Session',
-  ($scope, $routeParams, $modal, Schedule, Session) ->
-    Schedule.get id: $routeParams.scheduleId, (schedule) ->
-      for time in schedule.times
-        time.session = { blank: true }
-      $scope.schedule = schedule
-    Session.query scheduleId: $routeParams.scheduleId, (sessions) ->
-      $scope.sessions = {}
-      $scope.sessions[session.id] = session for session in sessions
+  '$scope', '$modal', 'Schedule', 'Session',
+  ($scope, $modal, Schedule, Session) ->
+    $scope.loadSchedule = (scheduleId) ->
+      Schedule.get id: scheduleId, (schedule) ->
+        for time in schedule.times
+          time.session = { blank: true }
+        $scope.schedule = schedule
+      Session.query scheduleId: scheduleId, (sessions) ->
+        $scope.sessions = {}
+        $scope.sessions[session.id] = session for session in sessions
 
     currentlyEditting = undefined
     $scope.editing = (time) -> time == currentlyEditting
