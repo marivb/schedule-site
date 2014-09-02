@@ -4,7 +4,8 @@ describe Api::SessionsController, type: :controller do
   describe 'POST create' do
     context 'valid session' do
       before :each do
-        @attributes = FactoryGirl.attributes_for :session
+        schedule = FactoryGirl.create :schedule
+        @attributes = FactoryGirl.attributes_for :session, schedule_id: schedule.id
 
         post :create, @attributes
 
@@ -38,7 +39,8 @@ describe Api::SessionsController, type: :controller do
 
     context 'invalid session' do
       before :each do
-        @attributes = FactoryGirl.attributes_for :session, title: ''
+        schedule = FactoryGirl.create :schedule
+        @attributes = FactoryGirl.attributes_for :session, schedule_id: schedule.id, title: ''
         @schedule_id = @attributes[:schedule_id]
 
         post :create, @attributes

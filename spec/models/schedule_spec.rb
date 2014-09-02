@@ -1,3 +1,5 @@
+require 'rails_helper'
+
 describe Schedule do
   describe 'with ScheduleTime type' do
     it 'should allow creating and retrieving' do

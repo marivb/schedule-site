@@ -1,3 +1,5 @@
+require 'rails_helper'
+
 describe Session do
   describe 'validation' do
     before :each do
