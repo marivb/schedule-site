@@ -5,12 +5,12 @@ app.config [
   ($routeProvider, $httpProvider) ->
     $routeProvider
       .when('/schedules/:scheduleId',
-        templateUrl: "<%= asset_path('organizer_app/organize_schedule.html') %>"
+        templateUrl: '<%= asset_path('organizer_app/organize_schedule.html') %>'
         controller: 'OrganizeScheduleCtrl'
       )
 
-    authToken = $("meta[name=\"csrf-token\"]").attr("content")
-    $httpProvider.defaults.headers.common["X-CSRF-TOKEN"] = authToken
+    authToken = $('meta[name="csrf-token"]').attr('content')
+    $httpProvider.defaults.headers.common['X-CSRF-TOKEN'] = authToken
 ]
 
 app.factory 'Schedule', [
@@ -34,7 +34,7 @@ app.controller 'OrganizeScheduleCtrl', [
 
     $scope.newSession = ->
       modalInstance = $modal.open(
-        templateUrl: "<%= asset_path('organizer_app/new_session.html') %>"
+        templateUrl: '<%= asset_path('organizer_app/new_session.html') %>'
         controller: 'NewSessionCtrl'
         scope: $scope
       )
