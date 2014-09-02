@@ -1,4 +1,5 @@
 class OrganizerAppController < ApplicationController
-  def home
+  def schedule
+    @schedule = Schedule.find params[:id]
   end
 end

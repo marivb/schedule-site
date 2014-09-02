@@ -2,7 +2,7 @@ Rails.application.routes.draw do
   mount JasmineRails::Engine => '/specs' if defined?(JasmineRails)
   root 'static_pages#index'
 
-  get '/organizer' => 'organizer_app#home'
+  get '/organizer/schedules/:id' => 'organizer_app#schedule'
 
   namespace :api, defaults: {format: :json} do
     resources :schedules, only: [:show] do
