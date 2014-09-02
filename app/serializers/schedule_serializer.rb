@@ -1,5 +1,6 @@
 class ScheduleSerializer < ActiveModel::Serializer
-  attributes :id, :name, :times
+  attributes :id, :name
+  has_many :times
 
   def id
     object.id.to_s

@@ -11,8 +11,9 @@ describe Schedule do
 
   describe 'times' do
     it 'should go from start to end at increments of slot_interval' do
-      schedule = Schedule.new start_time: 9.hours, end_time: 10.hours, slot_interval: 15
-      expect(schedule.times).to eq(['09:00', '09:15', '09:30', '09:45'])
+      schedule = Schedule.new start_time: 9.hours, end_time: 13.hours, slot_interval: 60
+      expect(schedule.times).to eq([TimeSlot.new(9.hours), TimeSlot.new(10.hours),
+                                    TimeSlot.new(11.hours), TimeSlot.new(12.hours)])
     end
   end
 end

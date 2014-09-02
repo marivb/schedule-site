@@ -12,7 +12,7 @@ describe ScheduleSerializer do
     expect(@json).to match(/"name":"#{@schedule.name}"/)
   end
 
-  it 'should contain times as array of strings' do
-    expect(@json).to match(/"times":\[("\d\d:\d\d",?)+\]/)
+  it 'should contain times as array' do
+    expect(@json).to match(/"times":\[([^,\[\]]+,?)+\]/)
   end
 end

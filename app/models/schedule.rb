@@ -11,8 +11,7 @@ class Schedule
 
   def times
     start_time.until(end_time, slot_interval).map do |time|
-      formatable_time = Time.now.beginning_of_day + time
-      formatable_time.strftime('%H:%M')
+      TimeSlot.new(time)
     end
   end
 end
