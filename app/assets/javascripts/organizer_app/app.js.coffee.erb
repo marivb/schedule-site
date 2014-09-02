@@ -1,23 +1,10 @@
-app = angular.module('organizerApp', ['ngResource', 'ui.bootstrap'])
+app = angular.module('organizer.app', ['organizer.factories', 'ui.bootstrap'])
 
 app.config [
   '$httpProvider',
   ($httpProvider) ->
     authToken = $('meta[name="csrf-token"]').attr('content')
     $httpProvider.defaults.headers.common['X-CSRF-TOKEN'] = authToken
-]
-
-app.factory 'Schedule', [
-  '$resource',
-  ($resource) ->
-    $resource('/api/schedules/:id')
-]
-
-app.factory 'Session', [
-  '$resource',
-  ($resource) ->
-    $resource('/api/schedules/:scheduleId/sessions/:sessionId',
-        {scheduleId: '@scheduleId', sessionId: '@id'})
 ]
 
 app.controller 'OrganizeScheduleCtrl', [
