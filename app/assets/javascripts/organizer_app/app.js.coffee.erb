@@ -29,8 +29,23 @@ app.factory 'Session', [
 app.controller 'OrganizeScheduleCtrl', [
   '$scope', '$routeParams', '$modal', 'Schedule', 'Session',
   ($scope, $routeParams, $modal, Schedule, Session) ->
-    $scope.schedule = Schedule.get(id: $routeParams.scheduleId)
-    $scope.sessions = Session.query {scheduleId: $routeParams.scheduleId}, ->
+    Schedule.get id: $routeParams.scheduleId, (schedule) ->
+      for time in schedule.times
+        time.session = { blank: true }
+      $scope.schedule = schedule
+    Session.query scheduleId: $routeParams.scheduleId, (sessions) ->
+      $scope.sessions = {}
+      $scope.sessions[session.id] = session for session in sessions
+
+    currentlyEditting = undefined
+    $scope.editing = (time) -> time == currentlyEditting
+    $scope.edit = (time) -> currentlyEditting = time
+    $scope.addSessionToTime = (time, sessionId) ->
+      time.session = $scope.sessions[sessionId]
+      currentlyEditting = undefined
+    $scope.clear = (time) ->
+      time.session = { blank: true }
+      currentlyEditting = undefined
 
     $scope.newSession = ->
       modalInstance = $modal.open(

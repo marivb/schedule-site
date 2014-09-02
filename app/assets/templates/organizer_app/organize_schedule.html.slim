@@ -4,7 +4,7 @@ h1
 .col-md-3
   ul
     li ng-repeat='session in sessions'
-      | {{session.title}} - {{session.duration}}
+      | {{session.id}} - {{session.title}} - {{session.duration}}
   a.btn-link ng-click='newSession()'
     | Add Session
 
@@ -18,4 +18,17 @@ h1
       tr ng-repeat='time in schedule.times'
         td
           | {{time.start}}
-        td blank
+
+        td
+          span ng-show='time.session.blank'
+            span ng-show='editing(time)'
+              form.form-inline ng-submit='addSessionToTime(time, sessionId)'
+                input.form-control ng-model='sessionId' type='text'
+                button.btn.btn-default.btn-xs type='submit' OK
+
+            span ng-hide='editing(time)'
+              | &lt;none&gt;
+              a.btn-xs.btn-link ng-click='edit(time)' Add
+          span ng-hide='time.session.blank'
+            | {{time.session.title}}
+            a.btn-xs.btn-link ng-click='clear(time)' Remove
