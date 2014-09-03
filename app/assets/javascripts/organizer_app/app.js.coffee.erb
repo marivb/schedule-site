@@ -1,16 +1,9 @@
-app = angular.module('organizer.app', ['organizer.factories', 'ui.bootstrap'])
+module = angular.module('organizer.controllers', ['ui.bootstrap'])
 
-app.config [
-  '$httpProvider',
-  ($httpProvider) ->
-    authToken = $('meta[name="csrf-token"]').attr('content')
-    $httpProvider.defaults.headers.common['X-CSRF-TOKEN'] = authToken
-]
-
-app.controller 'OrganizeScheduleCtrl', [
-  '$scope', '$modal', 'Schedule', 'Session',
-  ($scope, $modal, Schedule, Session) ->
-    $scope.loadSchedule = (scheduleId) ->
+module.controller 'OrganizeScheduleCtrl', [
+  '$scope', '$modal', 'scheduleId', 'Schedule', 'Session',
+  ($scope, $modal, scheduleId, Schedule, Session) ->
+    $scope.loadSchedule = ->
       Schedule.get id: scheduleId, (schedule) ->
         for time in schedule.times
           time.session = { blank: true }
@@ -36,10 +29,10 @@ app.controller 'OrganizeScheduleCtrl', [
         scope: $scope
       )
       modalInstance.result.then (session) ->
-        $scope.sessions.push session
+        $scope.sessions[session.id] = session
 ]
 
-app.controller 'NewSessionCtrl', [
+module.controller 'NewSessionCtrl', [
   '$scope', '$modalInstance', 'Session',
   ($scope, $modalInstance, Session) ->
     $scope.session = new Session({scheduleId: $scope.schedule.id})
