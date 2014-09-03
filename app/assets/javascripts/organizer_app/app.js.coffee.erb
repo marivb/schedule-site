@@ -1,16 +1,14 @@
-module = angular.module('organizer.controllers', ['ui.bootstrap'])
+module = angular.module('organizer.main', ['organizer.sessions'])
 
 module.controller 'OrganizeScheduleCtrl', [
-  '$scope', '$modal', 'scheduleId', 'Schedule', 'Session',
-  ($scope, $modal, scheduleId, Schedule, Session) ->
+  '$scope', 'scheduleId', 'Schedule', 'Sessions',
+  ($scope, scheduleId, Schedule, Sessions) ->
     $scope.loadSchedule = ->
       Schedule.get id: scheduleId, (schedule) ->
         for time in schedule.times
           time.session = { blank: true }
         $scope.schedule = schedule
-      Session.query scheduleId: scheduleId, (sessions) ->
-        $scope.sessions = {}
-        $scope.sessions[session.id] = session for session in sessions
+      Sessions.load (sessions) -> $scope.sessions = sessions
 
     currentlyEditting = undefined
     $scope.editing = (time) -> time == currentlyEditting
@@ -21,28 +19,4 @@ module.controller 'OrganizeScheduleCtrl', [
     $scope.clear = (time) ->
       time.session = { blank: true }
       currentlyEditting = undefined
-
-    $scope.newSession = ->
-      modalInstance = $modal.open(
-        templateUrl: '<%= asset_path('organizer_app/new_session.html') %>'
-        controller: 'NewSessionCtrl'
-        scope: $scope
-      )
-      modalInstance.result.then (session) ->
-        $scope.sessions[session.id] = session
-]
-
-module.controller 'NewSessionCtrl', [
-  '$scope', '$modalInstance', 'Session',
-  ($scope, $modalInstance, Session) ->
-    $scope.session = new Session({scheduleId: $scope.schedule.id})
-
-    $scope.createSession = ->
-      $scope.session.$save ->
-        session = $scope.session
-        $scope.session = undefined
-        $modalInstance.close(session)
-
-    $scope.cancel = ->
-      $modalInstance.dismiss('cancel')
 ]

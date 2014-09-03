@@ -1,11 +1,11 @@
-.row ng-controller='OrganizeScheduleCtrl' ng-init="loadSchedule()"
+.row ng-controller='OrganizeScheduleCtrl as organizer' ng-init="loadSchedule()"
   h1 = @schedule.name
 
-  .col-md-3
+  .col-md-3 ng-controller='SessionsCtrl as sessions'
     ul
-      li ng-repeat='session in sessions'
+      li ng-repeat='session in sessions.all'
         | {{session.id}} - {{session.title}} - {{session.duration}}
-    a.btn-link ng-click='newSession()'
+    a.btn-link ng-click='sessions.new()'
       | Add Session
 
   .col-md-9
@@ -20,15 +20,18 @@
             | {{time.start}}
 
           td
+            / No session in this spot
             span ng-show='time.session.blank'
+              / Displaying session input
               span ng-show='editing(time)'
                 form.form-inline ng-submit='addSessionToTime(time, sessionId)'
                   input.form-control ng-model='sessionId' type='text'
                   button.btn.btn-default.btn-xs type='submit' OK
-
+              / Displaying <none> Add
               span ng-hide='editing(time)'
                 | &lt;none&gt;
                 a.btn-xs.btn-link ng-click='edit(time)' Add
+            / Session in this spot
             span ng-hide='time.session.blank'
               | {{time.session.title}}
               a.btn-xs.btn-link ng-click='clear(time)' Remove

@@ -1,0 +1,49 @@
+module = angular.module('organizer.sessions', ['ui.bootstrap'])
+
+module.service 'Sessions', [
+  'Session', 'scheduleId',
+  (Session, scheduleId) ->
+    all = {}
+    @load = (callback) ->
+      Session.query scheduleId: scheduleId, (sessions) =>
+        for session in sessions
+          all[session.id] = session
+        callback(all)
+
+    @build = ->
+      new Session scheduleId: scheduleId
+
+    @create = (newSession) ->
+      newSession.$save ->
+        all[newSession.id] = newSession
+
+    return
+]
+
+module.controller 'SessionsCtrl', [
+  '$modal', 'Sessions',
+  ($modal, Sessions) ->
+    Sessions.load (sessions) => @all = sessions
+
+    @new = ->
+      $modal.open
+        templateUrl: '<%= asset_path('organizer_app/new_session.html') %>'
+        controller: 'NewSessionCtrl'
+
+    return
+]
+
+module.controller 'NewSessionCtrl', [
+  '$scope', '$modalInstance', 'Sessions',
+  ($scope, $modalInstance, Sessions) ->
+    $scope.session = Sessions.build()
+
+    $scope.ok = ->
+      Sessions.create($scope.session)
+      $modalInstance.close()
+
+    $scope.cancel = ->
+      $modalInstance.dismiss('cancel')
+
+    return
+]
