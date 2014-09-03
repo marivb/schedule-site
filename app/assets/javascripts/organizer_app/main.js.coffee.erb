@@ -1,4 +1,4 @@
-module = angular.module('organizer.main', ['organizer.sessions'])
+module = angular.module('organizer.main', ['organizer.sessions', 'organizer.factories'])
 
 module.controller 'OrganizeScheduleCtrl', [
   '$scope', 'scheduleId', 'Schedule', 'Sessions',

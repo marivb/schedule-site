@@ -1,21 +1,30 @@
 #= require organizer_app
 #= require angular-mocks/angular-mocks
 
-beforeEach(module('organizerApp'))
+beforeEach ->
+  jasmine.addMatchers
+    toBeAngularEqual: ->
+      compare: (actual, expected) ->
+        result = {}
+        result.pass = angular.equals(actual, expected)
+        actual_json = angular.toJson actual
+        expected_json = angular.toJson expected
+        if result.pass
+          result.message = "Expected #{actual_json} not to be angular.equals to #{expected_json}"
+        else
+          result.message = "Expected #{actual_json} to be angular.equals to #{expected_json}"
+        result
 
-beforeEach inject (_$httpBackend_, _$compile_, $rootScope, $controller, $location, $injector, $timeout) ->
-  @scope = $rootScope.$new()
-  @http = _$httpBackend_
-  @compile = _$compile_
-  @location = $location
-  @controller = $controller
-  @injector = $injector
-  @timeout = $timeout
-  @model = (name) =>
-    @injector.get(name)
-  @eventLoop =
-    flush: =>
-      @scope.$digest()
+beforeEach ->
+  @scheduleId = 'sc1'
+  module('organizer.main',
+    ($provide) =>
+      $provide.value('scheduleId', @scheduleId)
+      return
+  )
+  inject ($httpBackend, $injector) ->
+    @http = $httpBackend
+    @injector = $injector
 
 afterEach ->
   @http.resetExpectations()

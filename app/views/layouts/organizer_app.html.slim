@@ -6,7 +6,7 @@ html ng-app='organizer.app'
     = javascript_include_tag :organizer_app
     = csrf_meta_tags
     javascript:
-      angular.module('organizer.app', ['organizer.factories', 'organizer.main'])
+      angular.module('organizer.app', ['organizer.main'])
              .value('scheduleId', '#{@schedule.id}');
 
   body
