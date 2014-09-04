@@ -1,4 +1,13 @@
-module = angular.module('organizer.main', ['organizer.sessions', 'organizer.factories'])
+module = angular.module('organizer.main',
+                       ['organizer.sessions', 'organizer.factories',
+                        'organizer.sidebar', 'ui.bootstrap', 'ngResource'])
+
+module.config [
+  '$httpProvider',
+  ($httpProvider) ->
+    authToken = $('meta[name="csrf-token"]').attr('content')
+    $httpProvider.defaults.headers.common['X-CSRF-TOKEN'] = authToken
+]
 
 module.service 'ScheduleOrganizer', [
   'Schedule', 'scheduleId',

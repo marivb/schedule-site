@@ -1,16 +1,13 @@
 #= require spec_helper
 
 describe 'Sessions', ->
-  beforeEach ->
-    @Session = @injector.get 'Session'
-
   describe 'on construction', ->
     beforeEach ->
-      @session = new @Session(scheduleId: @scheduleId, id: 'ss1', title: 'Title', duration: 45)
+      @session = { scheduleId: @scheduleId, id: 'ss1', title: 'Title', duration: 45 }
 
       @Sessions = @injector.get 'Sessions'
 
-      @http.whenGET("/api/schedules/#{@scheduleId}/sessions").respond(200, [@session])
+      @http.expectGET("/api/schedules/#{@scheduleId}/sessions").respond(200, [@session])
       @http.flush()
 
     it 'should load sessions from back-end', ->
@@ -47,10 +44,10 @@ describe 'Sessions', ->
 
     describe 'create', ->
       beforeEach ->
-        @newSession = new @Session id: '1', scheduleId: @scheduleId, title: 'Title', duration: 45
-        @http.whenPOST("/api/schedules/#{@scheduleId}/sessions").respond(200, @newSession)
+        @newSession = { scheduleId: @scheduleId, id: '1', title: 'Title', duration: 45 }
+        @http.expectPOST("/api/schedules/#{@scheduleId}/sessions").respond(200, @newSession)
 
-        @Sessions.create new @Session(scheduleId: @scheduleId)
+        @Sessions.create @Sessions.build()
 
         @http.flush()
 

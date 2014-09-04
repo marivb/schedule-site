@@ -1,11 +1,11 @@
 .row ng-controller='OrganizeScheduleCtrl as organizer' ng-init="loadSchedule()"
   h1 = @schedule.name
 
-  .col-md-3 ng-controller='SessionsCtrl as sessions'
+  .col-md-3 ng-controller='SessionsCtrl'
     ul
-      li ng-repeat='session in sessions.all | orderBy:"title"'
+      li ng-repeat='session in sessions | orderBy:"title"'
         | {{session.title}} - {{session.duration}}
-    a.btn-link ng-click='sessions.new()'
+    a.btn-link ng-click='newSession()'
       | Add Session
 
   .col-md-9

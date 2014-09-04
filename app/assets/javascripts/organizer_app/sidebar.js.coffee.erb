@@ -1,0 +1,27 @@
+module = angular.module('organizer.sidebar', [])
+
+module.controller 'SessionsCtrl', [
+  '$modal', '$scope',
+  ($modal, $scope) ->
+    $scope.newSession = ->
+      $modal.open
+        templateUrl: '<%= asset_path('organizer_app/new_session.html') %>'
+        controller: 'NewSessionCtrl'
+
+    return
+]
+
+module.controller 'NewSessionCtrl', [
+  '$scope', '$modalInstance', 'Sessions',
+  ($scope, $modalInstance, Sessions) ->
+    $scope.session = Sessions.build()
+
+    $scope.ok = ->
+      Sessions.create($scope.session)
+      $modalInstance.close()
+
+    $scope.cancel = ->
+      $modalInstance.dismiss('cancel')
+
+    return
+]

@@ -1,8 +1,10 @@
-module = angular.module('organizer.sessions', ['ui.bootstrap'])
+module = angular.module('organizer.sessions', [])
 
 module.service 'Sessions', [
-  'Session', 'scheduleId',
-  (Session, scheduleId) ->
+  '$resource', 'scheduleId',
+  ($resource, scheduleId) ->
+    Session = $resource('/api/schedules/:scheduleId/sessions/:sessionId',
+                        {scheduleId: '@scheduleId', sessionId: '@id'})
     @all = []
     Session.query scheduleId: scheduleId, (sessions) =>
       for session in sessions
@@ -14,34 +16,6 @@ module.service 'Sessions', [
     @create = (newSession) ->
       newSession.$save =>
         @all.push newSession
-
-    return
-]
-
-module.controller 'SessionsCtrl', [
-  '$modal', 'Sessions',
-  ($modal, Sessions) ->
-    @all = Sessions.all
-
-    @new = ->
-      $modal.open
-        templateUrl: '<%= asset_path('organizer_app/new_session.html') %>'
-        controller: 'NewSessionCtrl'
-
-    return
-]
-
-module.controller 'NewSessionCtrl', [
-  '$scope', '$modalInstance', 'Sessions',
-  ($scope, $modalInstance, Sessions) ->
-    $scope.session = Sessions.build()
-
-    $scope.ok = ->
-      Sessions.create($scope.session)
-      $modalInstance.close()
-
-    $scope.cancel = ->
-      $modalInstance.dismiss('cancel')
 
     return
 ]
