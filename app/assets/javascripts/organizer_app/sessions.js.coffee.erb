@@ -5,17 +5,19 @@ module.service 'Sessions', [
   ($resource, scheduleId) ->
     Session = $resource('/api/schedules/:scheduleId/sessions/:sessionId',
                         {scheduleId: '@scheduleId', sessionId: '@id'})
-    @all = []
-    Session.query scheduleId: scheduleId, (sessions) =>
-      for session in sessions
-        @all.push session
+    all = []
+    @load = (callback) ->
+      Session.query scheduleId: scheduleId, (sessions) =>
+        for session in sessions
+          all.push session
+        callback(all)
 
     @build = ->
       new Session scheduleId: scheduleId
 
     @create = (newSession) ->
       newSession.$save =>
-        @all.push newSession
+        all.push newSession
 
     return
 ]
