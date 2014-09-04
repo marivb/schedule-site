@@ -32,9 +32,9 @@ module.controller 'OrganizeScheduleCtrl', [
       $scope.editor = Editor
 
     $scope.addSessionToTime = (time, session) ->
-      time.session = session
+      time.slots[0] = { type: 'session', session: session }
       Editor.clear()
     $scope.clear = (time) ->
-      time.session = { blank: true }
+      time.slots[0] = { type: 'blank' }
       Editor.clear()
 ]

@@ -13,8 +13,4 @@ describe 'Scheduler', ->
       @http.flush()
 
     it 'should load schedule from back-end', ->
-      expect(@data).toBeDefined()
-
-    it 'should initialize times with empty sessions', ->
-      expect(@data.times[0].session).toBeAngularEqual({blank: true})
-      expect(@data.times[1].session).toBeAngularEqual({blank: true})
+      expect(@data).toBeAngularEqual(@schedule)

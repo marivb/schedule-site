@@ -21,7 +21,7 @@
 
           td
             / No session in this spot
-            span ng-show='time.session.blank'
+            span ng-show='time.slots[0].type == "blank"'
               / Displaying session input
               span ng-show='editor.editing(time)'
                 form.form-inline ng-submit='addSessionToTime(time, sessionToAdd)'
@@ -38,6 +38,6 @@
                 a.btn-xs.btn-link ng-click='editor.edit(time)' Add
 
             / Session in this spot
-            span ng-hide='time.session.blank'
-              | {{time.session.title}}
+            span ng-hide='time.slots[0].type == "blank"'
+              | {{time.slots[0].session.title}}
               a.btn-xs.btn-link ng-click='clear(time)' Remove
