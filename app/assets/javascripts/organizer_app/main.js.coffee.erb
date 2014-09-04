@@ -1,22 +1,45 @@
 module = angular.module('organizer.main', ['organizer.sessions', 'organizer.factories'])
 
-module.controller 'OrganizeScheduleCtrl', [
-  '$scope', 'scheduleId', 'Schedule', 'Sessions',
-  ($scope, scheduleId, Schedule, Sessions) ->
-    $scope.loadSchedule = ->
+module.service 'ScheduleOrganizer', [
+  'Schedule', 'scheduleId',
+  (Schedule, scheduleId) ->
+    @schedule = undefined
+    @load = (callback) ->
       Schedule.get id: scheduleId, (schedule) ->
         for time in schedule.times
           time.session = { blank: true }
-        $scope.schedule = schedule
-      Sessions.load (sessions) -> $scope.sessions = sessions
+        @schedule = schedule
+        callback(@schedule)
 
+    return
+]
+
+module.service 'Editor', [
+  'Sessions',
+  (Sessions) ->
     currentlyEditting = undefined
-    $scope.editing = (time) -> time == currentlyEditting
-    $scope.edit = (time) -> currentlyEditting = time
-    $scope.addSessionToTime = (time, sessionId) ->
-      time.session = $scope.sessions[sessionId]
+    @editing = (time) ->
+      time == currentlyEditting
+    @edit = (time) ->
+      currentlyEditting = time
+    @clear = ->
       currentlyEditting = undefined
+
+    return
+]
+
+module.controller 'OrganizeScheduleCtrl', [
+  '$scope', 'scheduleId', 'ScheduleOrganizer', 'Sessions', 'Editor'
+  ($scope, scheduleId, ScheduleOrganizer, Sessions, Editor) ->
+    $scope.loadSchedule = ->
+      ScheduleOrganizer.load (schedule) -> $scope.schedule = schedule
+      $scope.sessions = Sessions.all
+      $scope.editor = Editor
+
+    $scope.addSessionToTime = (time, session) ->
+      time.session = session
+      Editor.clear()
     $scope.clear = (time) ->
       time.session = { blank: true }
-      currentlyEditting = undefined
+      Editor.clear()
 ]

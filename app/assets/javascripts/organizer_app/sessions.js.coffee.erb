@@ -3,23 +3,17 @@ module = angular.module('organizer.sessions', ['ui.bootstrap'])
 module.service 'Sessions', [
   'Session', 'scheduleId',
   (Session, scheduleId) ->
-    @all = {}
-
-    @load = (callback) ->
-      if Object.keys(@all).length > 0
-        callback(@all)
-      else
-        Session.query scheduleId: scheduleId, (sessions) =>
-          for session in sessions
-            @all[session.id] = session
-          callback(@all)
+    @all = []
+    Session.query scheduleId: scheduleId, (sessions) =>
+      for session in sessions
+        @all.push session
 
     @build = ->
       new Session scheduleId: scheduleId
 
     @create = (newSession) ->
       newSession.$save =>
-        @all[newSession.id] = newSession
+        @all.push newSession
 
     return
 ]
@@ -27,7 +21,7 @@ module.service 'Sessions', [
 module.controller 'SessionsCtrl', [
   '$modal', 'Sessions',
   ($modal, Sessions) ->
-    Sessions.load (sessions) => @all = sessions
+    @all = Sessions.all
 
     @new = ->
       $modal.open

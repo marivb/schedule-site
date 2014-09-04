@@ -3,8 +3,8 @@
 
   .col-md-3 ng-controller='SessionsCtrl as sessions'
     ul
-      li ng-repeat='session in sessions.all'
-        | {{session.id}} - {{session.title}} - {{session.duration}}
+      li ng-repeat='session in sessions.all | orderBy:"title"'
+        | {{session.title}} - {{session.duration}}
     a.btn-link ng-click='sessions.new()'
       | Add Session
 
@@ -23,14 +23,20 @@
             / No session in this spot
             span ng-show='time.session.blank'
               / Displaying session input
-              span ng-show='editing(time)'
-                form.form-inline ng-submit='addSessionToTime(time, sessionId)'
-                  input.form-control ng-model='sessionId' type='text'
+              span ng-show='editor.editing(time)'
+                form.form-inline ng-submit='addSessionToTime(time, sessionToAdd)'
+                  input.form-control [
+                    ng-model='sessionToAdd' type='text'
+                    typeahead='session as session.title for session in sessions | filter:{title:$viewValue}'
+                    typeahead-editable='false'
+                  ]
                   button.btn.btn-default.btn-xs type='submit' OK
+
               / Displaying <none> Add
-              span ng-hide='editing(time)'
+              span ng-hide='editor.editing(time)'
                 | &lt;none&gt;
-                a.btn-xs.btn-link ng-click='edit(time)' Add
+                a.btn-xs.btn-link ng-click='editor.edit(time)' Add
+
             / Session in this spot
             span ng-hide='time.session.blank'
               | {{time.session.title}}
