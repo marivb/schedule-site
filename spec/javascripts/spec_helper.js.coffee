@@ -27,5 +27,5 @@ beforeEach ->
     @injector = $injector
 
 afterEach ->
-  @http.resetExpectations()
   @http.verifyNoOutstandingExpectation()
+  @http.resetExpectations()

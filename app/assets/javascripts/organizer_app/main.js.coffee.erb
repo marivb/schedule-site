@@ -1,5 +1,5 @@
 module = angular.module('organizer.main',
-                       ['organizer.sessions', 'organizer.factories',
+                       ['organizer.sessions', 'organizer.factories', 'organizer.scheduler',
                         'organizer.sidebar', 'ui.bootstrap', 'ngResource'])
 
 module.config [
@@ -7,20 +7,6 @@ module.config [
   ($httpProvider) ->
     authToken = $('meta[name="csrf-token"]').attr('content')
     $httpProvider.defaults.headers.common['X-CSRF-TOKEN'] = authToken
-]
-
-module.service 'ScheduleOrganizer', [
-  'Schedule', 'scheduleId',
-  (Schedule, scheduleId) ->
-    @schedule = undefined
-    @load = (callback) ->
-      Schedule.get id: scheduleId, (schedule) ->
-        for time in schedule.times
-          time.session = { blank: true }
-        @schedule = schedule
-        callback(@schedule)
-
-    return
 ]
 
 module.service 'Editor', [
@@ -38,10 +24,10 @@ module.service 'Editor', [
 ]
 
 module.controller 'OrganizeScheduleCtrl', [
-  '$scope', 'scheduleId', 'ScheduleOrganizer', 'Sessions', 'Editor'
-  ($scope, scheduleId, ScheduleOrganizer, Sessions, Editor) ->
+  '$scope', 'Scheduler', 'Sessions', 'Editor'
+  ($scope, Scheduler, Sessions, Editor) ->
     $scope.loadSchedule = ->
-      ScheduleOrganizer.load (schedule) -> $scope.schedule = schedule
+      Scheduler.load (schedule) -> $scope.schedule = schedule
       Sessions.load (sessions) -> $scope.sessions = sessions
       $scope.editor = Editor
 
