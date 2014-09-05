@@ -11,17 +11,22 @@ describe Api::SchedulesController, type: :controller do
         @editor_double = instance_double('ScheduleEditor').as_null_object
         allow(ScheduleEditor).to receive(:new).with(@schedule).and_return(@editor_double)
 
-        @attributes = { id: @schedule.id, additions: 'list_of_additions',
-                        deletions: 'list_of_deletions' }
+        @attributes = { id: @schedule.id, additions: [ { listOfAdditions: true } ],
+                        deletions: [ { listOfDeletions: true } ] }
         post :update, @attributes
       end
 
       it 'processes additions with schedule editor' do
-        expect(@editor_double).to have_received(:process_additions).with('list_of_additions')
+        expect(@editor_double).to have_received(:process_additions).with [{list_of_additions: true}]
       end
 
       it 'processes deletions with schedule editor' do
-        expect(@editor_double).to have_received(:process_deletions).with('list_of_deletions')
+        expect(@editor_double).to have_received(:process_deletions).with [{list_of_deletions: true}]
+      end
+
+      it 'processes deletions before additions' do
+        expect(@editor_double).to have_received(:process_deletions).ordered
+        expect(@editor_double).to have_received(:process_additions).ordered
       end
 
       it 'saves schedule' do

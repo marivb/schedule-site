@@ -21,4 +21,41 @@ describe 'Schedules API', type: :request do
       end
     end
   end
+
+  describe 'PATCH /api/schedules/:id' do
+    before :each do
+      @schedule = FactoryGirl.create :schedule, slot_interval: 15
+      @session = FactoryGirl.create :session, schedule: @schedule, duration: 15
+
+      @schedule.add_session @schedule.times[0].slots[0], @session
+      @schedule.save!
+
+      attributes = {
+        additions: [
+          {
+            timeId: @schedule.times[1].id.to_s,
+            slotId: @schedule.times[1].slots[0].id.to_s,
+            sessionId: @session.id.to_s
+          }
+        ],
+        deletions: [
+          {
+            timeId: @schedule.times[0].id.to_s,
+            slotId: @schedule.times[0].slots[0].id.to_s,
+          }
+        ]
+      }
+      patch "/api/schedules/#{@schedule.id}", attributes
+    end
+
+    it 'clears session from first slot' do
+      schedule = Schedule.first
+      expect(schedule.times[0].slots[0]).to be_blank
+    end
+
+    it 'adds session to second slot' do
+      schedule = Schedule.first
+      expect(schedule.times[1].slots[0]).to be_session
+    end
+  end
 end
