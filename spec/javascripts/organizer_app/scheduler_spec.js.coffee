@@ -15,16 +15,32 @@ describe 'Scheduler', ->
     it 'loads schedule from back-end', ->
       expect(@data).toBeAngularEqual(@schedule)
 
-  describe 'add', ->
-    it 'adds session to time slot', ->
-      slot = { id: 10, type: 'blank' }
-      session = { id: 20, title: 'Title' }
-      @Scheduler.add slot, session
-      expect(slot).toBeAngularEqual({ id: 10, type: 'session', session: session })
+  describe 'modifying', ->
+    beforeEach ->
+      @schedule = { id: @scheduleId }
+      @http.expectGET("/api/schedules/#{@scheduleId}").respond(200, @schedule)
+      @Scheduler.load ->
+      @http.flush()
 
-  describe 'clear', ->
-    it 'clears session from slot', ->
-      session = { id: 20, title: 'Title' }
-      slot = { id: 10, type: 'session', session: session }
-      @Scheduler.clear slot
-      expect(slot).toBeAngularEqual({ id: 10, type: 'blank' })
+    describe 'add', ->
+      it 'calls back-end to add session', ->
+        time = { id: 1 }
+        slot = { id: 11 }
+        session = { id: 500 }
+        @http.expectPATCH("/api/schedules/#{@scheduleId}",
+          { id: @scheduleId, additions: [{timeId: time.id, slotId: slot.id, sessionId: session.id}]}
+        ).respond(200, { id: @scheduleId, done: true })
+
+        @Scheduler.add time, slot, session
+        @http.flush()
+
+    describe 'clear', ->
+      it 'calls back-end to clear', ->
+        time = { id: 1 }
+        slot = { id: 11 }
+        @http.expectPATCH("/api/schedules/#{@scheduleId}",
+          { id: @scheduleId, deletions: [{timeId: time.id, slotId: slot.id }]}
+        ).respond(200)
+
+        @Scheduler.clear time, slot
+        @http.flush()

@@ -1,5 +1,5 @@
 module = angular.module('organizer.main',
-                       ['organizer.sessions', 'organizer.factories', 'organizer.scheduler',
+                       ['organizer.sessions', 'organizer.scheduler',
                         'organizer.sidebar', 'ui.bootstrap', 'ngResource'])
 
 module.config [
@@ -31,10 +31,12 @@ module.controller 'OrganizeScheduleCtrl', [
       Sessions.load (sessions) -> $scope.sessions = sessions
       $scope.editor = Editor
 
+    $scope.sessionFor = (sessionId) ->
+      Sessions.find(sessionId)
     $scope.addSessionToTime = (time, session) ->
-      Scheduler.add time.slots[0], session
+      Scheduler.add time, time.slots[0], session
       Editor.clear()
     $scope.clear = (time) ->
-      Scheduler.clear time.slots[0]
+      Scheduler.clear time, time.slots[0]
       Editor.clear()
 ]

@@ -1,18 +1,25 @@
 module = angular.module('organizer.scheduler', [])
 
 module.service 'Scheduler', [
-  'Schedule', 'scheduleId',
-  (Schedule, scheduleId) ->
+  '$resource', 'scheduleId', '$log'
+  ($resource, scheduleId, $log) ->
+    Schedule = $resource('/api/schedules/:id', {}, update: {method: 'PATCH', params: {id: '@id'} })
+    schedule = undefined
+
     @load = (callback) ->
-      Schedule.get id: scheduleId, callback
+      Schedule.get id: scheduleId, (data) ->
+        schedule = data
+        callback(schedule)
 
-    @add = (slot, session) ->
-      slot.type = 'session'
-      slot.session = session
+    @add = (time, slot, session) ->
+      addition = { timeId: time.id, slotId: slot.id, sessionId: session.id }
+      schedule.additions = [addition]
+      schedule.$update()
 
-    @clear = (slot) ->
-      slot.type = 'blank'
-      delete slot.session
+    @clear = (time, slot) ->
+      deletion = { timeId: time.id, slotId: slot.id }
+      schedule.deletions = [deletion]
+      schedule.$update()
 
     return
 ]
