@@ -1,7 +1,11 @@
 describe TimeRowSerializer do
   before :each do
-    @time = FactoryGirl.build :time, slots: [FactoryGirl.build(:blank_slot)]
+    @time = FactoryGirl.build :time, id: BSON::ObjectId.new, slots: [FactoryGirl.build(:blank_slot)]
     @json = TimeRowSerializer.new(@time, root: false).to_json
+  end
+
+  it 'contains id as a string' do
+    expect(@json).to match(/"id":"#{@time.id}"/)
   end
 
   it 'contains start as a string' do
