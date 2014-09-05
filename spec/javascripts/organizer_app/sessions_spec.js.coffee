@@ -52,3 +52,18 @@ describe 'Sessions', ->
     it 'saves the session', ->
       expect(@data.length).toEqual(1)
       expect(@data[0]).toBeAngularEqual(@newSession)
+
+  describe 'find', ->
+    beforeEach ->
+      @session1 = { scheduleId: @scheduleId, id: '1', title: 'Title 1', duration: 45 }
+      @session2 = { scheduleId: @scheduleId, id: '2', title: 'Title 2', duration: 45 }
+      @http.expectGET("/api/schedules/#{@scheduleId}/sessions").respond(200, [@session1, @session2])
+
+      @Sessions.load (data) => @data = data
+      @http.flush()
+
+    it 'finds session by id', ->
+      expect(@Sessions.find('2')).toBeAngularEqual(@session2)
+
+    it 'is undefined when session is not found', ->
+      expect(@Sessions.find('3')).toBeUndefined()

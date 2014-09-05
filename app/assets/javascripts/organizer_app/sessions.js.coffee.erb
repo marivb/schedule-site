@@ -1,8 +1,8 @@
 module = angular.module('organizer.sessions', [])
 
 module.service 'Sessions', [
-  '$resource', 'scheduleId',
-  ($resource, scheduleId) ->
+  '$resource', 'scheduleId', '$filter',
+  ($resource, scheduleId, $filter) ->
     Session = $resource('/api/schedules/:scheduleId/sessions/:sessionId',
                         {scheduleId: '@scheduleId', sessionId: '@id'})
     all = []
@@ -18,6 +18,9 @@ module.service 'Sessions', [
     @create = (newSession) ->
       newSession.$save =>
         all.push newSession
+
+    @find = (id) ->
+      $filter('filter')(all, {id: id})[0]
 
     return
 ]
