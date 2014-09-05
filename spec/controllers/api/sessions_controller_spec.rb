@@ -4,7 +4,8 @@ describe Api::SessionsController, type: :controller do
   describe 'POST create' do
     context 'valid session' do
       before :each do
-        schedule = FactoryGirl.create :schedule
+        schedule = FactoryGirl.build :schedule
+        allow(Schedule).to receive(:find).and_return(schedule)
         @attributes = FactoryGirl.attributes_for :session, schedule_id: schedule.id
 
         post :create, @attributes

@@ -5,7 +5,7 @@ Rails.application.routes.draw do
   get '/organizer/schedules/:id' => 'organizer_app#schedule'
 
   namespace :api, defaults: {format: :json} do
-    resources :schedules, only: [:show] do
+    resources :schedules, only: [:show, :update] do
       resources :sessions, only: [:index, :create]
     end
   end
