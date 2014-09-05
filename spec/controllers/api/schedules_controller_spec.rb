@@ -33,7 +33,7 @@ describe Api::SchedulesController, type: :controller do
       end
 
       it 'renders schedule as json' do
-        expect(json['id']).to eq(@schedule.id.to_s)
+        expect(response_json['id']).to eq(@schedule.id.to_s)
       end
     end
   end

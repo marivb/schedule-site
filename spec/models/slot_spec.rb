@@ -75,11 +75,11 @@ describe Slot, type: :model do
           @slot.add_session session
         end
 
-        it 'should set type to session' do
+        it 'sets type to session' do
           expect(@slot).to be_session
         end
 
-        it 'should set session' do
+        it 'sets session' do
           expect(@slot.session).to eq(session)
         end
       end
@@ -89,7 +89,7 @@ describe Slot, type: :model do
           @slot = Slot.new type: Slot::TYPES.CONT
         end
 
-        it 'should raise error' do
+        it 'raises error' do
           expect {
             @slot.add_session session
           }.to raise_error
@@ -101,7 +101,7 @@ describe Slot, type: :model do
           @slot = Slot.new type: Slot::TYPES.SESSION
         end
 
-        it 'should raise error' do
+        it 'raises error' do
           expect {
             @slot.add_session session
           }.to raise_error
@@ -116,7 +116,7 @@ describe Slot, type: :model do
           @slot.clear
         end
 
-        it 'should set type to blank' do
+        it 'sets type to blank' do
           expect(@slot).to be_blank
         end
       end
@@ -127,11 +127,11 @@ describe Slot, type: :model do
           @slot.clear
         end
 
-        it 'should set type to blank' do
+        it 'sets type to blank' do
           expect(@slot).to be_blank
         end
 
-        it 'should set session to nil' do
+        it 'sets session to nil' do
           expect(@slot.session).to be_nil
         end
       end

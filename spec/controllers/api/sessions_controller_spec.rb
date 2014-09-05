@@ -22,7 +22,7 @@ describe Api::SessionsController, type: :controller do
       end
 
       it 'returns session json' do
-        expect(json['id']).to eq(@created_session.id.to_s)
+        expect(response_json['id']).to eq(@created_session.id.to_s)
       end
 
       it 'saves title' do
@@ -56,7 +56,7 @@ describe Api::SessionsController, type: :controller do
       end
 
       it 'returns errors' do
-        expect(json['errors']).to be_a(Hash)
+        expect(response_json['errors']).to be_a(Hash)
       end
     end
   end

@@ -5,19 +5,19 @@ describe SessionSerializer do
     @json = SessionSerializer.new(@session, root: false).to_json
   end
 
-  it 'should contain id as string' do
+  it 'contains id as string' do
     expect(@json).to match(/"id":"#{@session.id}"/)
   end
 
-  it 'should contain title as string' do
+  it 'contains title as string' do
     expect(@json).to match(/"title":"#{@session.title}"/)
   end
 
-  it 'should contain duration as integer' do
+  it 'contains duration as integer' do
     expect(@json).to match(/"duration":#{@session.duration}/)
   end
 
-  it 'should contain timeSlotSpan as an integer' do
+  it 'contains timeSlotSpan as an integer' do
     expect(@json).to match(/"timeSlotSpan":\d+/)
   end
 end

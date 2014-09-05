@@ -4,15 +4,15 @@ describe ScheduleSerializer do
     @json = ScheduleSerializer.new(@schedule, root: false).to_json
   end
 
-  it 'should contain id as string' do
+  it 'contains id as string' do
     expect(@json).to match(/"id":"#{@schedule.id}"/)
   end
 
-  it 'should contain name as string' do
+  it 'contains name as string' do
     expect(@json).to match(/"name":"#{@schedule.name}"/)
   end
 
-  it 'should contain times as array' do
+  it 'contains times as array' do
     expect(@json).to match(/"times":\[{"start":"#{@schedule.times[0].start}".+\]/)
   end
 end

@@ -116,7 +116,7 @@ describe Schedule do
       end
 
       context 'clear cont slot' do
-        it 'should raise error' do
+        it 'raises error' do
           expect {
             @schedule.clear @schedule.times[1].slots[0]
           }.to raise_error

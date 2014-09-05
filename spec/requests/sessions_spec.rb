@@ -14,7 +14,7 @@ describe 'Sessions API', type: :request do
       end
 
       it 'contains the session id' do
-        expect(json['id']).to_not be_nil
+        expect(response_json['id']).to_not be_nil
       end
     end
   end

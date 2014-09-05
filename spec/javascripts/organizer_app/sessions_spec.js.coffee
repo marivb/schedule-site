@@ -12,29 +12,29 @@ describe 'Sessions', ->
       @Sessions.load (data) => @data = data
       @http.flush()
 
-    it 'should load sessions from back-end', ->
+    it 'loads sessions from back-end', ->
       expect(@data.length).toEqual(1)
 
-    it 'should put sessions in a list', ->
+    it 'puts sessions in a list', ->
       expect(@data[0]).toBeAngularEqual(@session)
 
   describe 'build', ->
     beforeEach ->
       @session = @Sessions.build()
 
-    it 'should build a new session', ->
+    it 'builds a new session', ->
       expect(@session).toBeDefined()
 
-    it 'should not set session.id', ->
+    it 'does not set session.id', ->
       expect(@session.id).toBeUndefined()
 
-    it 'should not set session.title', ->
+    it 'does not set session.title', ->
       expect(@session.title).toBeUndefined()
 
-    it 'should not set session.duration', ->
+    it 'does not set session.duration', ->
       expect(@session.duration).toBeUndefined()
 
-    it 'should set session.scheduleId', ->
+    it 'sets session.scheduleId', ->
       expect(@session.scheduleId).toEqual(@scheduleId)
 
   describe 'create', ->
@@ -49,6 +49,6 @@ describe 'Sessions', ->
 
       @http.flush()
 
-    it 'should save the session', ->
+    it 'saves the session', ->
       expect(@data.length).toEqual(1)
       expect(@data[0]).toBeAngularEqual(@newSession)

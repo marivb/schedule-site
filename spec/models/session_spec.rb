@@ -50,20 +50,16 @@ describe Session do
   end
 
   describe 'time_slot_span' do
-    context 'duration is exact multiple of interval' do
-      it 'should be duration / interval' do
-        schedule = FactoryGirl.build :schedule, slot_interval: 15
-        session = schedule.sessions.build duration: 45
-        expect(session.time_slot_span).to eq(3)
-      end
+    it 'is duration / interval' do
+      schedule = FactoryGirl.build :schedule, slot_interval: 15
+      session = schedule.sessions.build duration: 45
+      expect(session.time_slot_span).to eq(3)
     end
 
-    context 'duration is not exact multiple' do
-      it 'should round up from duration / interval' do
-        schedule = FactoryGirl.build :schedule, slot_interval: 10
-        session = schedule.sessions.build duration: 45
-        expect(session.time_slot_span).to eq(5)
-      end
+    it 'rounds up' do
+      schedule = FactoryGirl.build :schedule, slot_interval: 10
+      session = schedule.sessions.build duration: 45
+      expect(session.time_slot_span).to eq(5)
     end
   end
 end

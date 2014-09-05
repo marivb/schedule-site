@@ -12,5 +12,5 @@ describe 'Scheduler', ->
       @Scheduler.load (data) => @data = data
       @http.flush()
 
-    it 'should load schedule from back-end', ->
+    it 'loads schedule from back-end', ->
       expect(@data).toBeAngularEqual(@schedule)

@@ -13,11 +13,11 @@ describe 'Schedules API', type: :request do
       end
 
       it 'contains the schedule name' do
-        expect(json['name']).to eq(@schedule.name)
+        expect(response_json['name']).to eq(@schedule.name)
       end
 
       it 'contains the schedule times' do
-        expect(json['times']).to be_a(Array)
+        expect(response_json['times']).to be_a(Array)
       end
     end
   end
