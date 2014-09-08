@@ -23,28 +23,29 @@ class Schedule
     end
   end
 
-  def add_session slot, session
-    slot.add_session(session)
-    session_span = session.time_slot_span
-    times_after(slot.time, session_span).each do |time|
-      time.slots[0].type = 'cont'
+  def add_session first_slot, session
+    slots = times_for(first_slot.time, session.time_slot_span).collect { |t| t.slots[0] }
+
+    slots.first.add_session(session)
+
+    slots[1..-1].each do |slot|
+      slot.continue
     end
   end
 
-  def clear slot
-    session_span = slot.session.time_slot_span
-    slot.clear
-    times_after(slot.time, session_span).each do |time|
-      time.slots[0].clear
+  def clear first_slot
+    session_span = first_slot.session.time_slot_span
+    slots = times_for(first_slot.time, session_span).collect { |t| t.slots[0] }
+    slots.each do |slot|
+      slot.clear
     end
   end
 
   private
 
-  def times_after time, size
-    time_at = times.find_index(time)
-    start = time_at + 1
-    finish = time_at + size
+  def times_for time, size
+    start = times.find_index(time)
+    finish = start + size
     times[start...finish]
   end
 end

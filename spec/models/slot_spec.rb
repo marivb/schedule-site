@@ -61,7 +61,7 @@ describe Slot, type: :model do
 
     context 'invalid type' do
       it 'is not valid' do
-        slot = Slot.new type: 'any'
+        slot = Slot.new type: 'invalid'
         expect(slot).to_not be_valid
       end
     end
@@ -87,29 +87,94 @@ describe Slot, type: :model do
       context 'from cont' do
         before :each do
           @slot = Slot.new type: Slot::TYPES.CONT
+          @slot.add_session session
         end
 
-        it 'raises error' do
-          expect {
-            @slot.add_session session
-          }.to raise_error
+        it 'sets type to invalid' do
+          expect(@slot.type).to eq('invalid')
         end
       end
 
       context 'from session' do
         before :each do
           @slot = Slot.new type: Slot::TYPES.SESSION
+          @slot.add_session session
         end
 
-        it 'raises error' do
-          expect {
-            @slot.add_session session
-          }.to raise_error
+        it 'sets type to invalid' do
+          expect(@slot.type).to eq('invalid')
+        end
+      end
+
+      context 'when persisted' do
+        it 'does not save document' do
+          schedule = FactoryGirl.create :schedule
+          slot = schedule.times[0].slots[0]
+
+          session = FactoryGirl.create :session, schedule: schedule
+          slot.add_session session
+          expect(slot).to be_changed
+        end
+      end
+    end
+
+    describe 'continue' do
+      context 'from blank' do
+        before :each do
+          @slot = Slot.new type: Slot::TYPES.BLANK
+          @slot.continue
+        end
+
+        it 'sets type to cont' do
+          expect(@slot).to be_cont
+        end
+      end
+
+      context 'from cont' do
+        before :each do
+          @slot = Slot.new type: Slot::TYPES.CONT
+          @slot.continue
+        end
+
+        it 'sets type to invalid' do
+          expect(@slot.type).to eq('invalid')
+        end
+      end
+
+      context 'from session' do
+        before :each do
+          @slot = Slot.new type: Slot::TYPES.SESSION, session: session
+          @slot.continue
+        end
+
+        it 'sets type to invalid' do
+          expect(@slot.type).to eq('invalid')
+        end
+      end
+
+      context 'when persisted' do
+        it 'does not save document' do
+          schedule = FactoryGirl.create :schedule
+          slot = schedule.times[0].slots[0]
+
+          slot.continue
+          expect(slot).to be_changed
         end
       end
     end
 
     describe 'clear' do
+      context 'from blank' do
+        before :each do
+          @slot = Slot.new type: Slot::TYPES.BLANK
+          @slot.clear
+        end
+
+        it 'leaves type as blank' do
+          expect(@slot).to be_blank
+        end
+      end
+
       context 'from cont' do
         before :each do
           @slot = Slot.new type: Slot::TYPES.CONT
@@ -133,6 +198,18 @@ describe Slot, type: :model do
 
         it 'sets session to nil' do
           expect(@slot.session).to be_nil
+        end
+      end
+
+      context 'when persisted' do
+        it 'does not save document' do
+          schedule = FactoryGirl.create :schedule
+          slot = schedule.times[0].slots[0]
+          slot.continue
+          schedule.save!
+
+          slot.clear
+          expect(slot).to be_changed
         end
       end
     end

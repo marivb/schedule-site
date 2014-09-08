@@ -24,11 +24,24 @@ class Slot
   end
 
   def add_session session
-    raise 'Not allowed' unless blank?
-    set type: TYPES.SESSION, session: session
+    fill_with type: TYPES.SESSION, session: session
+  end
+
+  def continue
+    fill_with type: TYPES.CONT
   end
 
   def clear
-    set type: TYPES.BLANK, session: nil
+    write_attributes type: TYPES.BLANK, session: nil
+  end
+
+  private
+
+  def fill_with(attributes)
+    if blank?
+      write_attributes(attributes)
+    else
+      write_attributes(type: 'invalid')
+    end
   end
 end

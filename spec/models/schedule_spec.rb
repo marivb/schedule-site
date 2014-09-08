@@ -62,16 +62,35 @@ describe Schedule do
         @schedule.add_session @slot, @session
       end
 
-      it 'changeslot to that session' do
+      it 'changes first slot to session' do
         expect(@slot).to be_session
       end
 
-      it 'changes slot in following time to cont' do
+      it 'changes second slot to cont' do
         expect(@schedule.times[1].slots[0]).to be_cont
       end
 
-      it 'does not change slot in following time' do
+      it 'does not change third slot' do
         expect(@schedule.times[2].slots[0]).to be_blank
+      end
+    end
+
+    context 'session spanning two times with second slot taken' do
+      before :each do
+        scheduled_session = @schedule.sessions.build duration: 30
+        second_slot = @schedule.times[1].slots[0]
+        @schedule.add_session second_slot, scheduled_session
+
+        @session.duration = 60
+        @schedule.add_session @slot, @session
+      end
+
+      it 'changes first slot to session' do
+        expect(@slot).to be_session
+      end
+
+      it 'changes second slot to invalid' do
+        expect(@schedule.times[1].slots[0].type).to eq('invalid')
       end
     end
   end
