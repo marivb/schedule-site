@@ -3,12 +3,12 @@ class Slot
   TYPES = OpenStruct.new(BLANK: 'blank', CONT: 'cont', SESSION: 'session').freeze
 
   field :type
+  field :session_id, type: BSON::ObjectId
 
-  has_one :session
   embedded_in :time, class_name: 'TimeRow'
 
   validates :type, presence: true, inclusion: { in: TYPES.to_h.values }
-  validates :session, presence: { if: :session? },
+  validates :session_id, presence: { if: :session? },
                       absence: { unless: :session? }
 
   def blank?
@@ -23,8 +23,12 @@ class Slot
     type == TYPES.SESSION
   end
 
+  def session
+    Session.find(session_id) if session?
+  end
+
   def add_session session
-    fill_with type: TYPES.SESSION, session: session
+    fill_with type: TYPES.SESSION, session_id: session.id
   end
 
   def continue
@@ -32,7 +36,7 @@ class Slot
   end
 
   def clear
-    write_attributes type: TYPES.BLANK, session: nil
+    write_attributes type: TYPES.BLANK, session_id: nil
   end
 
   private

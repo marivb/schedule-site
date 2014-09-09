@@ -6,7 +6,6 @@ class Session
   field :duration, type: Integer
 
   belongs_to :schedule
-  belongs_to :slot
 
   validates :title, presence: true
   validates :duration, presence: true, numericality: {greater_than: 0, only_integer: true}

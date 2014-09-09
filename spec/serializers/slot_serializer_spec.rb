@@ -29,7 +29,7 @@ describe SlotSerializer do
     end
 
     it 'contains session id as string' do
-      expect(@json).to match(/"sessionId":"#{@slot.session.id}"/)
+      expect(@json).to match(/"sessionId":"#{@slot.session_id}"/)
     end
   end
 end

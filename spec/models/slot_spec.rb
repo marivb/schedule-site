@@ -1,7 +1,24 @@
 require 'rails_helper'
 
 describe Slot, type: :model do
-  let(:session) { FactoryGirl.build :session }
+  let(:session_id) { BSON::ObjectId.new }
+
+  describe 'session' do
+    context 'not session type' do
+      it 'is nil' do
+        slot = Slot.new type: Slot::TYPES.BLANK
+        expect(slot.session).to be_nil
+      end
+    end
+
+    context 'session type' do
+      it 'is corresponding session' do
+        session = FactoryGirl.create :session
+        slot = Slot.new type: Slot::TYPES.SESSION, session_id: session.id
+        expect(slot.session).to eq(session)
+      end
+    end
+  end
 
   describe 'validations' do
     context 'blank' do
@@ -14,7 +31,7 @@ describe Slot, type: :model do
 
       context 'with session' do
         it 'is not valid' do
-          slot = Slot.new type: Slot::TYPES.BLANK, session: session
+          slot = Slot.new type: Slot::TYPES.BLANK, session_id: session_id
           expect(slot).to_not be_valid
         end
       end
@@ -30,7 +47,7 @@ describe Slot, type: :model do
 
       context 'with session' do
         it 'is valid' do
-          slot = Slot.new type: Slot::TYPES.SESSION, session: session
+          slot = Slot.new type: Slot::TYPES.SESSION, session_id: session_id
           expect(slot).to be_valid
         end
       end
@@ -46,7 +63,7 @@ describe Slot, type: :model do
 
       context 'with session' do
         it 'is not valid' do
-          slot = Slot.new type: Slot::TYPES.CONT, session: session
+          slot = Slot.new type: Slot::TYPES.CONT, session_id: session_id
           expect(slot).to_not be_valid
         end
       end
@@ -69,6 +86,8 @@ describe Slot, type: :model do
 
   describe 'modifiers' do
     describe 'add_session' do
+      let(:session) { FactoryGirl.build :session, id: session_id }
+
       context 'from blank' do
         before :each do
           @slot = Slot.new type: Slot::TYPES.BLANK
@@ -79,8 +98,8 @@ describe Slot, type: :model do
           expect(@slot).to be_session
         end
 
-        it 'sets session' do
-          expect(@slot.session).to eq(session)
+        it 'sets session_id' do
+          expect(@slot.session_id).to eq(session_id)
         end
       end
 
@@ -143,7 +162,7 @@ describe Slot, type: :model do
 
       context 'from session' do
         before :each do
-          @slot = Slot.new type: Slot::TYPES.SESSION, session: session
+          @slot = Slot.new type: Slot::TYPES.SESSION, session_id: session_id
           @slot.continue
         end
 
@@ -188,7 +207,7 @@ describe Slot, type: :model do
 
       context 'from session' do
         before :each do
-          @slot = Slot.new type: Slot::TYPES.SESSION, session: session
+          @slot = Slot.new type: Slot::TYPES.SESSION, session_id: session_id
           @slot.clear
         end
 
@@ -196,8 +215,8 @@ describe Slot, type: :model do
           expect(@slot).to be_blank
         end
 
-        it 'sets session to nil' do
-          expect(@slot.session).to be_nil
+        it 'sets session_id to nil' do
+          expect(@slot.session_id).to be_nil
         end
       end
 

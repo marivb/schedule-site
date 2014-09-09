@@ -37,7 +37,7 @@ describe Schedule do
   describe 'add_session' do
     before :each do
       @schedule = Schedule.build_full start_time: 9.hours, end_time: 11.hours, slot_interval: 30
-      @session = @schedule.sessions.build
+      @session = FactoryGirl.build :session, schedule: @schedule
       @slot = @schedule.times[0].slots[0]
     end
 
@@ -98,7 +98,8 @@ describe Schedule do
   describe 'clear' do
     before :each do
       @schedule = Schedule.build_full start_time: 9.hours, end_time: 11.hours, slot_interval: 30
-      @session = @schedule.sessions.build
+      @session = FactoryGirl.build :session, schedule: @schedule
+      allow(Session).to receive(:find).with(@session.id).and_return(@session)
       @slot = @schedule.times[0].slots[0]
     end
 

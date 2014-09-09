@@ -9,6 +9,6 @@ FactoryGirl.define do
 
   factory :session_slot, class: Slot do
     type Slot::TYPES.SESSION
-    session
+    session_id { BSON::ObjectId.new }
   end
 end

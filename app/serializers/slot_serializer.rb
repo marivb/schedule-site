@@ -6,6 +6,6 @@ class SlotSerializer < ActiveModel::Serializer
   end
 
   def sessionId
-    object.session.id.to_s if object.session?
+    object.session_id.to_s if object.session?
   end
 end
