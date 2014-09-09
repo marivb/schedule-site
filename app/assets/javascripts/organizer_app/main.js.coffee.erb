@@ -12,11 +12,12 @@ module.config [
 module.service 'Editor', [
   ->
     currentlyEditting = undefined
-    @editing = (time) ->
-      time == currentlyEditting
     @edit = (time) ->
+      currentlyEditting.editting = false if currentlyEditting
       currentlyEditting = time
+      time.editting = true
     @clear = ->
+      currentlyEditting.editting = false if currentlyEditting
       currentlyEditting = undefined
 
     return
