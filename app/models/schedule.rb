@@ -1,6 +1,7 @@
 class Schedule
   include Mongoid::Document
   include Mongoid::Timestamps
+  include Mongoid::EmbeddedErrors
 
   field :name
   field :start_time, type: Types::ScheduleTime

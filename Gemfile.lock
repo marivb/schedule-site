@@ -1,3 +1,10 @@
+GIT
+  remote: https://github.com/jspies/mongoid-embedded-errors.git
+  revision: 9f0657699bcd4db169ea606a7b63d1803211bc9e
+  specs:
+    mongoid-embedded-errors (2.0.1)
+      mongoid (>= 3.0.0)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -169,6 +176,7 @@ DEPENDENCIES
   factory_girl_rails (~> 4.0)
   jasmine-rails
   mongoid (~> 4.0.0)
+  mongoid-embedded-errors (~> 2.0.1)!
   rails (= 4.1.0)
   rails_12factor (~> 0.0.2)
   rspec-rails (~> 3.0.0)

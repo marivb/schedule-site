@@ -10,6 +10,7 @@ gem 'uglifier', '>= 1.3.0'
 gem 'mongoid', '~> 4.0.0'
 gem 'slim', '~> 2.0.3'
 gem 'active_model_serializers', '~> 0.9.0'
+gem 'mongoid-embedded-errors', '~> 2.0.1', git: 'https://github.com/jspies/mongoid-embedded-errors.git'
 
 group :production do
   gem 'rails_12factor', '~> 0.0.2'
