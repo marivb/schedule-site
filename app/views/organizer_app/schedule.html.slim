@@ -25,6 +25,7 @@
               form.form-inline ng-submit='addSessionToTime(time, sessionToAdd)'
                 input.form-control [
                   ng-model='sessionToAdd' type='text'
+                  focus-on='editor.editing(time)'
                   typeahead='session as session.title for session in sessions | filter:{title:$viewValue}'
                   typeahead-editable='false'
                 ]

@@ -23,6 +23,13 @@ module.service 'Editor', [
     return
 ]
 
+module.directive 'focusOn', ($timeout) ->
+  restrict: 'A'
+  link: (scope, element, attrs) ->
+    scope.$watch attrs.focusOn, (value) ->
+      if value
+        $timeout -> element[0].focus()
+
 module.controller 'OrganizeScheduleCtrl', [
   '$scope', 'Scheduler', 'Sessions', 'Editor'
   ($scope, Scheduler, Sessions, Editor) ->
