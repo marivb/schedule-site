@@ -1,5 +1,5 @@
 module = angular.module('organizer.main',
-                       ['organizer.sessions', 'organizer.scheduler',
+                       ['organizer.sessions', 'organizer.scheduler', 'organizer.blankSlot',
                         'organizer.sidebar', 'ui.bootstrap', 'ngResource'])
 
 module.config [
@@ -10,8 +10,7 @@ module.config [
 ]
 
 module.service 'Editor', [
-  'Sessions',
-  (Sessions) ->
+  ->
     currentlyEditting = undefined
     @editing = (time) ->
       time == currentlyEditting
@@ -22,13 +21,6 @@ module.service 'Editor', [
 
     return
 ]
-
-module.directive 'focusOn', ($timeout) ->
-  restrict: 'A'
-  link: (scope, element, attrs) ->
-    scope.$watch attrs.focusOn, (value) ->
-      if value
-        $timeout -> element[0].focus()
 
 module.controller 'OrganizeScheduleCtrl', [
   '$scope', 'Scheduler', 'Sessions', 'Editor'

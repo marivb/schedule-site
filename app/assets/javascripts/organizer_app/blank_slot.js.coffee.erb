@@ -1,0 +1,8 @@
+module = angular.module('organizer.blankSlot', [])
+
+module.directive 'focusOn', ($timeout) ->
+  restrict: 'A'
+  link: (scope, element, attrs) ->
+    scope.$watch attrs.focusOn, (value) ->
+      if value
+        $timeout -> element[0].focus()
