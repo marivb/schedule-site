@@ -12,15 +12,20 @@ class Schedule
 
   def self.build_full options={}
     Schedule.new(options).tap do |schedule|
-      begin
-        schedule.start_time.until(schedule.end_time, schedule.slot_interval).map do |time|
-          time = schedule.times.build start_delta: time
-          time.slots.build type: Slot::TYPES.BLANK
-        end
-      rescue
-        raise 'Cannot build full schedule'
-      end
+      schedule.reset
     end
+  end
+
+  def reset
+    times.delete_all
+
+    start_time.until(end_time, slot_interval).map do |time|
+      time = times.build start_delta: time
+      time.slots.build type: Slot::TYPES.BLANK
+    end
+    self
+  rescue
+    raise 'Cannot build full schedule'
   end
 
   def add_session first_slot, session
