@@ -1,6 +1,6 @@
 / Displaying session input
 span ng-show='editor.editing(time)'
-  form.form-inline ng-submit='addSessionToTime(time, sessionToAdd)'
+  form.form-inline ng-submit='submit({time: time, session: sessionToAdd})'
     input.form-control [
       ng-model='sessionToAdd' type='text'
       focus-on='editor.editing(time)'

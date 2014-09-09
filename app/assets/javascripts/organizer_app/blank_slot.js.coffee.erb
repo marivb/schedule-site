@@ -4,6 +4,7 @@ module.directive 'scheduleBlankSlot', [
   ->
     restrict: 'A'
     templateUrl: '<%= asset_path('organizer_app/blank_slot.html') %>'
+    scope: { submit: '&sessionAdd', time: '=', sessions: '=', editor: '=' }
 ]
 
 module.directive 'focusOn', ($timeout) ->

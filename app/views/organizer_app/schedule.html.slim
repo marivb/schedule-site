@@ -19,7 +19,7 @@
           td
             | {{time.start}}
 
-          td ng-switch-when='blank' schedule-blank-slot=true
+          td ng-switch-when='blank' schedule-blank-slot=true session-add='addSessionToTime(time, session)' time='time' sessions='sessions' editor='editor'
 
           td [
             ng-switch-when='session'
