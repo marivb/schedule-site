@@ -1,13 +1,13 @@
 / Displaying session input
 span ng-show='time.editting'
-  form.form-inline ng-submit='submit({time: time, session: sessionToAdd})'
+  form.form-inline name='form' novalidate=true ng-submit='submit({time: time, session: sessionToAdd})'
     input.form-control [
-      ng-model='sessionToAdd' type='text'
+      ng-model='sessionToAdd' type='text' required=true
       focus-on='time.editting'
       typeahead='session as session.title for session in sessions | filter:{title:$viewValue}'
       typeahead-editable='false'
     ]
-    button.btn.btn-default.btn-xs type='submit' OK
+    button.btn.btn-default.btn-xs type='submit' ng-disabled='form.$invalid' OK
 
 / Displaying <none> Add
 span ng-hide='time.editting'
