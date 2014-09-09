@@ -1,11 +1,19 @@
 module = angular.module('organizer.blankSlot', [])
 
-module.directive 'scheduleBlankSlot', [
-  ->
+module.directive 'scheduleBlankSlot', ->
     restrict: 'A'
     templateUrl: '<%= asset_path('organizer_app/blank_slot.html') %>'
-    scope: { submit: '&sessionAdd', time: '=', sessions: '=', editor: '=' }
-]
+    scope: { submit: '&sessionAdd', time: '=', sessions: '=' }
+    controller: [
+      'Editor', '$scope',
+      (Editor, $scope) ->
+        $scope.control = {
+          edit: ->
+            Editor.edit($scope.time)
+        }
+
+        return
+    ]
 
 module.directive 'focusOn', ($timeout) ->
   restrict: 'A'
