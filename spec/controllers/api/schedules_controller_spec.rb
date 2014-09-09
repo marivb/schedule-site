@@ -27,8 +27,8 @@ describe Api::SchedulesController, type: :controller do
 
     context 'valid addition' do
       before :each do
-        @attributes = { id: @schedule.id, additions: [ { listOfAdditions: true } ] }
-        post :update, @attributes
+        attributes = { id: @schedule.id, additions: [ { listOfAdditions: true } ] }
+        post :update, attributes
       end
 
       it 'processes additions with schedule editor' do
@@ -40,8 +40,8 @@ describe Api::SchedulesController, type: :controller do
 
     context 'valid deletion' do
       before :each do
-        @attributes = { id: @schedule.id, deletions: [ { listOfDeletions: true } ] }
-        post :update, @attributes
+        attributes = { id: @schedule.id, deletions: [ { listOfDeletions: true } ] }
+        post :update, attributes
       end
 
       it 'processes deletions with schedule editor' do
@@ -53,9 +53,9 @@ describe Api::SchedulesController, type: :controller do
 
     context 'valid with both' do
       before :each do
-        @attributes = { id: @schedule.id, additions: [ { listOfAdditions: true } ],
+        attributes = { id: @schedule.id, additions: [ { listOfAdditions: true } ],
                         deletions: [ { listOfDeletions: true } ] }
-        post :update, @attributes
+        post :update, attributes
       end
 
       it 'processes deletions before additions' do
@@ -64,6 +64,29 @@ describe Api::SchedulesController, type: :controller do
       end
 
       it_behaves_like 'an update'
+    end
+
+    context 'invalid change' do
+      before :each do
+        attributes = { id: @schedule.id, additions: [ { listOfAdditions: true } ] }
+        allow(@editor_double).to receive(:process_additions) do
+          @schedule.times[0].slots[0].type = 'invalid'
+        end
+
+        post :update, attributes
+      end
+
+      it 'does not save schedule' do
+        expect(@schedule).to_not be_persisted
+      end
+
+      it 'returns bad request status' do
+        expect(response).to have_http_status(:bad_request)
+      end
+
+      it 'renders errors as json' do
+        expect(response_json['errors'].size).to eq(1)
+      end
     end
   end
 end
