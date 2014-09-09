@@ -1,5 +1,11 @@
 module = angular.module('organizer.blankSlot', [])
 
+module.directive 'scheduleBlankSlot', [
+  ->
+    restrict: 'A'
+    templateUrl: '<%= asset_path('organizer_app/blank_slot.html') %>'
+]
+
 module.directive 'focusOn', ($timeout) ->
   restrict: 'A'
   link: (scope, element, attrs) ->

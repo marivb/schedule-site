@@ -1,0 +1,15 @@
+/ Displaying session input
+span ng-show='editor.editing(time)'
+  form.form-inline ng-submit='addSessionToTime(time, sessionToAdd)'
+    input.form-control [
+      ng-model='sessionToAdd' type='text'
+      focus-on='editor.editing(time)'
+      typeahead='session as session.title for session in sessions | filter:{title:$viewValue}'
+      typeahead-editable='false'
+    ]
+    button.btn.btn-default.btn-xs type='submit' OK
+
+/ Displaying <none> Add
+span ng-hide='editor.editing(time)'
+  | &lt;none&gt;
+  a.btn-xs.btn-link ng-click='editor.edit(time)' Add
