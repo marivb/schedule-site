@@ -1,6 +1,6 @@
 class Api::SessionsController < ApplicationController
   def index
-    sessions = Session.where(schedule_id: params[:schedule_id])
+    sessions = Session.includes(:schedule).where(schedule_id: params[:schedule_id])
     render json: sessions, root: false
   end
 
