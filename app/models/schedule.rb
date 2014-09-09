@@ -30,12 +30,16 @@ class Schedule
   end
 
   def add_session first_slot, session
-    slots = times_for(first_slot.time, session.time_slot_span).collect { |t| t.slots[0] }
+    span = session.time_slot_span
+    available_slots = times_for(first_slot.time, span).collect { |t| t.slots[0] }.select(&:blank?)
+    if available_slots.size < span
+      first_slot.invalidate
+    else
+      available_slots.first.add_session(session)
 
-    slots.first.add_session(session)
-
-    slots[1..-1].each do |slot|
-      slot.continue
+      available_slots[1..-1].each do |slot|
+        slot.continue
+      end
     end
   end
 

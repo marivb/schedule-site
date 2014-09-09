@@ -1,5 +1,16 @@
 require 'rails_helper'
 
+def it_does_not_save_document
+  it 'does not save document' do
+    schedule = FactoryGirl.create :schedule
+    slot = schedule.times[0].slots[0]
+
+    yield(slot, schedule)
+
+    expect(slot).to be_changed
+  end
+end
+
 describe Slot, type: :model do
   let(:session_id) { BSON::ObjectId.new }
 
@@ -126,13 +137,9 @@ describe Slot, type: :model do
       end
 
       context 'when persisted' do
-        it 'does not save document' do
-          schedule = FactoryGirl.create :schedule
-          slot = schedule.times[0].slots[0]
-
+        it_does_not_save_document do |slot, schedule|
           session = FactoryGirl.create :session, schedule: schedule
           slot.add_session session
-          expect(slot).to be_changed
         end
       end
     end
@@ -172,12 +179,27 @@ describe Slot, type: :model do
       end
 
       context 'when persisted' do
-        it 'does not save document' do
-          schedule = FactoryGirl.create :schedule
-          slot = schedule.times[0].slots[0]
-
+        it_does_not_save_document do |slot, schedule|
           slot.continue
-          expect(slot).to be_changed
+        end
+      end
+    end
+
+    context 'invalidate' do
+      context 'from any type' do
+        before :each do
+          @slot = Slot.new
+          @slot.invalidate
+        end
+
+        it 'sets type to invalid' do
+          expect(@slot.type).to eq('invalid')
+        end
+      end
+
+      context 'when persisted' do
+        it_does_not_save_document do |slot, schedule|
+          slot.invalidate
         end
       end
     end
@@ -221,14 +243,11 @@ describe Slot, type: :model do
       end
 
       context 'when persisted' do
-        it 'does not save document' do
-          schedule = FactoryGirl.create :schedule
-          slot = schedule.times[0].slots[0]
+        it_does_not_save_document do |slot, schedule|
           slot.continue
           schedule.save!
 
           slot.clear
-          expect(slot).to be_changed
         end
       end
     end

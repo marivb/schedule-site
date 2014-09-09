@@ -35,6 +35,10 @@ class Slot
     fill_with type: TYPES.CONT
   end
 
+  def invalidate
+    write_attributes(type: 'invalid')
+  end
+
   def clear
     write_attributes type: TYPES.BLANK, session_id: nil
   end
@@ -45,7 +49,7 @@ class Slot
     if blank?
       write_attributes(attributes)
     else
-      write_attributes(type: 'invalid')
+      invalidate
     end
   end
 end
