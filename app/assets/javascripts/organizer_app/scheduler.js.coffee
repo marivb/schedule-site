@@ -14,7 +14,7 @@ module.service 'Scheduler', [
     @add = (time, slot, session) ->
       addition = { timeId: time.id, slotId: slot.id, sessionId: session.id }
       schedule.additions = [addition]
-      schedule.$update()
+      schedule.$update (->), -> delete schedule.additions
 
     @clear = (time, slot) ->
       deletion = { timeId: time.id, slotId: slot.id }

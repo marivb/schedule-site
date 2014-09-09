@@ -17,9 +17,8 @@ describe 'Scheduler', ->
 
   describe 'modifying', ->
     beforeEach ->
-      @schedule = { id: @scheduleId }
-      @http.expectGET("/api/schedules/#{@scheduleId}").respond(200, @schedule)
-      @Scheduler.load ->
+      @http.whenGET("/api/schedules/#{@scheduleId}").respond(200, {id: @scheduleId})
+      @Scheduler.load (data) => @schedule = data
       @http.flush()
 
     describe 'add', ->
@@ -33,6 +32,19 @@ describe 'Scheduler', ->
 
         @Scheduler.add time, slot, session
         @http.flush()
+        expect(@schedule).toBeAngularEqual({ id: @scheduleId, done: true })
+
+      it 'removes additions if failed', ->
+        time = { id: 1 }
+        slot = { id: 11 }
+        session = { id: 500 }
+        @http.expectPATCH("/api/schedules/#{@scheduleId}",
+          { id: @scheduleId, additions: [{timeId: time.id, slotId: slot.id, sessionId: session.id}]}
+        ).respond(400)
+
+        @Scheduler.add time, slot, session
+        @http.flush()
+        expect(@schedule.additions).toBeUndefined()
 
     describe 'clear', ->
       it 'calls back-end to clear', ->
@@ -40,7 +52,8 @@ describe 'Scheduler', ->
         slot = { id: 11 }
         @http.expectPATCH("/api/schedules/#{@scheduleId}",
           { id: @scheduleId, deletions: [{timeId: time.id, slotId: slot.id }]}
-        ).respond(200)
+        ).respond(200, { id: @scheduleId, done: true })
 
         @Scheduler.clear time, slot
         @http.flush()
+        expect(@schedule).toBeAngularEqual({ id: @scheduleId, done: true })
