@@ -10,6 +10,10 @@ module.directive 'scheduleBlankSlot', ->
         $scope.control = {
           edit: ->
             Editor.edit($scope.time)
+          reset: (form) ->
+            $scope.sessionToAdd = ''
+            form.$setPristine()
+            Editor.clear()
         }
 
         return

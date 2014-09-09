@@ -7,7 +7,8 @@ span ng-show='time.editting'
       typeahead='session as session.title for session in sessions | filter:{title:$viewValue}'
       typeahead-editable='false'
     ]
-    button.btn.btn-default.btn-xs type='submit' ng-disabled='form.$invalid' OK
+    button.btn.btn-primary.btn-s type='submit' ng-disabled='form.$invalid' OK
+    button.btn.btn-link.btn-xs type='button' ng-click='control.reset(form)' Cancel
 
 / Displaying <none> Add
 span ng-hide='time.editting'
