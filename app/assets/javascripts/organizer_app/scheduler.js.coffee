@@ -14,7 +14,8 @@ module.service 'Scheduler', [
     @addSession = (time, slot, session) ->
       data = { timeId: time.id, slotId: slot.id, sessionId: session.id }
       schedule.change = { type: 'sessionAdd', data: data }
-      schedule.$update()
+      schedule.$update ->
+        session.placed = true
 
     @clearSlot = (time, slot) ->
       data = { timeId: time.id, slotId: slot.id }
