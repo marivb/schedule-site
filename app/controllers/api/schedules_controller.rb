@@ -7,7 +7,7 @@ class Api::SchedulesController < ApplicationController
   def update
     schedule = Schedule.find params[:id]
     editor = ScheduleEditor.new(schedule)
-    editor.process convert_keys(params[:changes])
+    editor.process convert_keys(params[:change])
     if editor.save
       render json: schedule, status: 200, root: false
     else

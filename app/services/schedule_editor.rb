@@ -3,14 +3,12 @@ class ScheduleEditor
     @schedule = schedule
   end
 
-  def process(changes)
-    changes.each do |change|
-      case change[:type]
-      when 'sessionAdd'
-        process_addition(change[:data])
-      when 'sessionRemove'
-        process_deletion(change[:data])
-      end
+  def process(change)
+    case change[:type]
+    when 'sessionAdd'
+      process_addition(change[:data])
+    when 'sessionRemove'
+      process_deletion(change[:data])
     end
   end
 

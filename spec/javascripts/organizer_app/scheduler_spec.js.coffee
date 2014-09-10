@@ -27,9 +27,9 @@ describe 'Scheduler', ->
         slot = { id: 11 }
         session = { id: 500 }
         @http.expectPATCH("/api/schedules/#{@scheduleId}",
-          { id: @scheduleId, changes: [
+          { id: @scheduleId, change:
             { type: 'sessionAdd', data: {timeId: time.id, slotId: slot.id, sessionId: session.id} }
-          ]}
+          }
         ).respond(200, { id: @scheduleId, done: true })
 
         @Scheduler.addSession time, slot, session
@@ -41,9 +41,9 @@ describe 'Scheduler', ->
         time = { id: 1 }
         slot = { id: 11 }
         @http.expectPATCH("/api/schedules/#{@scheduleId}",
-          { id: @scheduleId, changes: [
+          { id: @scheduleId, change:
             { type: 'sessionRemove', data: {timeId: time.id, slotId: slot.id } }
-          ]}
+          }
         ).respond(200, { id: @scheduleId, done: true })
 
         @Scheduler.clearSlot time, slot

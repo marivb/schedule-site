@@ -42,20 +42,26 @@ describe ScheduleEditor do
     end
 
     describe 'process' do
-      before :each do
-        changes = [
-          {type: 'sessionAdd', data: @addition_data},
-          {type: 'sessionRemove', data: @deletion_data }
-        ]
-        @editor.process(changes)
+      context 'sessionAdd' do
+        before :each do
+          change = {type: 'sessionAdd', data: @addition_data}
+          @editor.process(change)
+        end
+
+        it 'processes addition' do
+          expect(@schedule.times[0].slots[0]).to be_session
+        end
       end
 
-      it 'processes addition' do
-        expect(@schedule.times[0].slots[0]).to be_session
-      end
+      context 'sessionRemove' do
+        before :each do
+          change = {type: 'sessionRemove', data: @deletion_data}
+          @editor.process(change)
+        end
 
-      it 'processes deletion' do
-        expect(@schedule.times[1].slots[0]).to be_blank
+        it 'processes deletion' do
+          expect(@schedule.times[1].slots[0]).to be_blank
+        end
       end
     end
   end

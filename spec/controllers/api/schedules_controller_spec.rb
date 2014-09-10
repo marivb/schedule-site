@@ -11,11 +11,11 @@ describe Api::SchedulesController, type: :controller do
       allow(ScheduleEditor).to receive(:new).with(@schedule).and_return(@editor_double)
     end
 
-    context 'valid changes' do
+    context 'valid change' do
       before :each do
         allow(@editor_double).to receive(:save).and_return(true)
 
-        attributes = { id: @schedule.id, changes: [ { listOfChanges: 'myChanges' } ] }
+        attributes = { id: @schedule.id, change: { changeDescription: 'myChange' } }
         post :update, attributes
       end
 
@@ -24,7 +24,7 @@ describe Api::SchedulesController, type: :controller do
       end
 
       it 'converts keys in changes' do
-        expect(@editor_double).to have_received(:process).with [{list_of_changes: 'myChanges'}]
+        expect(@editor_double).to have_received(:process).with({change_description: 'myChange'})
       end
 
       it 'saves schedule' do
@@ -47,7 +47,7 @@ describe Api::SchedulesController, type: :controller do
         @schedule.times[0].slots[0].type = 'invalid'
         @schedule.valid?
 
-        attributes = { id: @schedule.id, changes: [] }
+        attributes = { id: @schedule.id, change: {} }
         post :update, attributes
       end
 

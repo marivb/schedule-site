@@ -13,12 +13,12 @@ module.service 'Scheduler', [
 
     @addSession = (time, slot, session) ->
       data = { timeId: time.id, slotId: slot.id, sessionId: session.id }
-      schedule.changes = [{ type: 'sessionAdd', data: data }]
+      schedule.change = { type: 'sessionAdd', data: data }
       schedule.$update()
 
     @clearSlot = (time, slot) ->
       data = { timeId: time.id, slotId: slot.id }
-      schedule.changes = [{ type: 'sessionRemove', data: data }]
+      schedule.change = { type: 'sessionRemove', data: data }
       schedule.$update()
 
     return
