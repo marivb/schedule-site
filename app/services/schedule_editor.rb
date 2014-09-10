@@ -14,18 +14,21 @@ class ScheduleEditor
 
   def process_addition(addition)
     slot = find_slot addition[:time_id], addition[:slot_id]
-    session = Session.find(addition[:session_id])
+    @session = Session.find(addition[:session_id])
 
-    @schedule.add_session slot, session
+    @schedule.add_session slot, @session
+    @session.placed = true
   end
 
   def process_deletion(deletion)
     slot = find_slot deletion[:time_id], deletion[:slot_id]
+    @session = slot.session
     @schedule.clear slot
+    @session.placed = false
   end
 
   def save
-    @schedule.save
+    @schedule.save && @session.save
   end
 
   private

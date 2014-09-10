@@ -4,6 +4,7 @@ class Session
 
   field :title
   field :duration, type: Integer
+  field :placed, type: Boolean
 
   belongs_to :schedule
 
