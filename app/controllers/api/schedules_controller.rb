@@ -7,8 +7,7 @@ class Api::SchedulesController < ApplicationController
   def update
     schedule = Schedule.find params[:id]
     editor = ScheduleEditor.new(schedule)
-    editor.process_deletions convert_keys(params[:deletions]) if params.has_key? :deletions
-    editor.process_additions convert_keys(params[:additions]) if params.has_key? :additions
+    editor.process convert_keys(params[:changes])
     if schedule.save
       render json: schedule, status: 200, root: false
     else
@@ -18,9 +17,18 @@ class Api::SchedulesController < ApplicationController
 
   private
 
-  def convert_keys(camelized_array)
-    camelized_array.map do |hash|
-      Hash[hash.map { |k, v| [k.to_s.underscore.to_sym, v] } ]
+  def convert_keys(object)
+    case object
+    when Array
+      object.map { |element| convert_keys(element) }
+    when Hash
+      Hash[object.map { |k, v| [convert_key(k), convert_keys(v)] }]
+    else
+      object
     end
+  end
+
+  def convert_key(symbol)
+    symbol.to_s.underscore.to_sym
   end
 end

@@ -3,20 +3,27 @@ class ScheduleEditor
     @schedule = schedule
   end
 
-  def process_additions(additions)
-    additions.each do |addition|
-      slot = find_slot addition[:time_id], addition[:slot_id]
-      session = Session.find(addition[:session_id])
-
-      @schedule.add_session slot, session
+  def process(changes)
+    changes.each do |change|
+      case change[:type]
+      when 'sessionAdd'
+        process_addition(change[:data])
+      when 'sessionRemove'
+        process_deletion(change[:data])
+      end
     end
   end
 
-  def process_deletions(deletions)
-    deletions.each do |deletion|
-      slot = find_slot deletion[:time_id], deletion[:slot_id]
-      @schedule.clear slot
-    end
+  def process_addition(addition)
+    slot = find_slot addition[:time_id], addition[:slot_id]
+    session = Session.find(addition[:session_id])
+
+    @schedule.add_session slot, session
+  end
+
+  def process_deletion(deletion)
+    slot = find_slot deletion[:time_id], deletion[:slot_id]
+    @schedule.clear slot
   end
 
   private

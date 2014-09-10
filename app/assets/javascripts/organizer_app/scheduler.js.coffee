@@ -11,14 +11,14 @@ module.service 'Scheduler', [
         schedule = data
         callback(schedule)
 
-    @add = (time, slot, session) ->
-      addition = { timeId: time.id, slotId: slot.id, sessionId: session.id }
-      schedule.additions = [addition]
-      schedule.$update (->), -> delete schedule.additions
+    @addSession = (time, slot, session) ->
+      data = { timeId: time.id, slotId: slot.id, sessionId: session.id }
+      schedule.changes = [{ type: 'sessionAdd', data: data }]
+      schedule.$update()
 
-    @clear = (time, slot) ->
-      deletion = { timeId: time.id, slotId: slot.id }
-      schedule.deletions = [deletion]
+    @clearSlot = (time, slot) ->
+      data = { timeId: time.id, slotId: slot.id }
+      schedule.changes = [{ type: 'sessionRemove', data: data }]
       schedule.$update()
 
     return

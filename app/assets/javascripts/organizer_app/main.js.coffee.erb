@@ -34,9 +34,9 @@ module.controller 'OrganizeScheduleCtrl', [
     $scope.sessionFor = (sessionId) ->
       Sessions.find(sessionId)
     $scope.addSessionToTime = (time, session) ->
-      Scheduler.add time, time.slots[0], session
+      Scheduler.addSession time, time.slots[0], session
       Editor.clear()
     $scope.clear = (time) ->
-      Scheduler.clear time, time.slots[0]
+      Scheduler.clearSlot time, time.slots[0]
       Editor.clear()
 ]

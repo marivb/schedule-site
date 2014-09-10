@@ -11,7 +11,20 @@ describe Api::SchedulesController, type: :controller do
       allow(ScheduleEditor).to receive(:new).with(@schedule).and_return(@editor_double)
     end
 
-    shared_examples 'an update' do
+    context 'valid changes' do
+      before :each do
+        attributes = { id: @schedule.id, changes: [ { listOfChanges: 'myChanges' } ] }
+        post :update, attributes
+      end
+
+      it 'processes changes' do
+        expect(@editor_double).to have_received(:process)
+      end
+
+      it 'converts keys in changes' do
+        expect(@editor_double).to have_received(:process).with [{list_of_changes: 'myChanges'}]
+      end
+
       it 'saves schedule' do
         expect(@schedule).to be_persisted
       end
@@ -25,51 +38,10 @@ describe Api::SchedulesController, type: :controller do
       end
     end
 
-    context 'valid addition' do
+    context 'invalid changes' do
       before :each do
-        attributes = { id: @schedule.id, additions: [ { listOfAdditions: true } ] }
-        post :update, attributes
-      end
-
-      it 'processes additions with schedule editor' do
-        expect(@editor_double).to have_received(:process_additions).with [{list_of_additions: true}]
-      end
-
-      it_behaves_like 'an update'
-    end
-
-    context 'valid deletion' do
-      before :each do
-        attributes = { id: @schedule.id, deletions: [ { listOfDeletions: true } ] }
-        post :update, attributes
-      end
-
-      it 'processes deletions with schedule editor' do
-        expect(@editor_double).to have_received(:process_deletions).with [{list_of_deletions: true}]
-      end
-
-      it_behaves_like 'an update'
-    end
-
-    context 'valid with both' do
-      before :each do
-        attributes = { id: @schedule.id, additions: [ { listOfAdditions: true } ],
-                        deletions: [ { listOfDeletions: true } ] }
-        post :update, attributes
-      end
-
-      it 'processes deletions before additions' do
-        expect(@editor_double).to have_received(:process_deletions).ordered
-        expect(@editor_double).to have_received(:process_additions).ordered
-      end
-
-      it_behaves_like 'an update'
-    end
-
-    context 'invalid change' do
-      before :each do
-        attributes = { id: @schedule.id, additions: [ { listOfAdditions: true } ] }
-        allow(@editor_double).to receive(:process_additions) do
+        attributes = { id: @schedule.id, changes: [] }
+        allow(@editor_double).to receive(:process) do
           @schedule.times[0].slots[0].type = 'invalid'
         end
 

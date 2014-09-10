@@ -31,17 +31,21 @@ describe 'Schedules API', type: :request do
       @schedule.save!
 
       attributes = {
-        additions: [
+        changes: [
           {
-            timeId: @schedule.times[1].id.to_s,
-            slotId: @schedule.times[1].slots[0].id.to_s,
-            sessionId: @session.id.to_s
-          }
-        ],
-        deletions: [
+            type: 'sessionAdd',
+            data: {
+              timeId: @schedule.times[1].id.to_s,
+              slotId: @schedule.times[1].slots[0].id.to_s,
+              sessionId: @session.id.to_s
+            }
+          },
           {
-            timeId: @schedule.times[0].id.to_s,
-            slotId: @schedule.times[0].slots[0].id.to_s,
+            type: 'sessionRemove',
+            data: {
+              timeId: @schedule.times[0].id.to_s,
+              slotId: @schedule.times[0].slots[0].id.to_s,
+            }
           }
         ]
       }
