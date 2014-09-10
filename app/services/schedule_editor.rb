@@ -26,6 +26,10 @@ class ScheduleEditor
     @schedule.clear slot
   end
 
+  def save
+    @schedule.save
+  end
+
   private
 
   def find_slot(time_id, slot_id)

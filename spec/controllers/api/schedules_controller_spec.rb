@@ -13,6 +13,8 @@ describe Api::SchedulesController, type: :controller do
 
     context 'valid changes' do
       before :each do
+        allow(@editor_double).to receive(:save).and_return(true)
+
         attributes = { id: @schedule.id, changes: [ { listOfChanges: 'myChanges' } ] }
         post :update, attributes
       end
@@ -26,7 +28,7 @@ describe Api::SchedulesController, type: :controller do
       end
 
       it 'saves schedule' do
-        expect(@schedule).to be_persisted
+        expect(@editor_double).to have_received(:save)
       end
 
       it 'returns ok status' do
@@ -40,16 +42,13 @@ describe Api::SchedulesController, type: :controller do
 
     context 'invalid changes' do
       before :each do
+        allow(@editor_double).to receive(:save).and_return(false)
+        # Populates erros for rendering
+        @schedule.times[0].slots[0].type = 'invalid'
+        @schedule.valid?
+
         attributes = { id: @schedule.id, changes: [] }
-        allow(@editor_double).to receive(:process) do
-          @schedule.times[0].slots[0].type = 'invalid'
-        end
-
         post :update, attributes
-      end
-
-      it 'does not save schedule' do
-        expect(@schedule).to_not be_persisted
       end
 
       it 'returns bad request status' do
