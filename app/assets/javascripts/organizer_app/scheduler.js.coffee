@@ -17,10 +17,11 @@ module.service 'Scheduler', [
       schedule.$update ->
         session.placed = true
 
-    @clearSlot = (time, slot) ->
+    @clearSlot = (time, slot, session) ->
       data = { timeId: time.id, slotId: slot.id }
       schedule.change = { type: 'sessionRemove', data: data }
-      schedule.$update()
+      schedule.$update ->
+        session.placed = false
 
     return
 ]

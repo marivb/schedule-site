@@ -51,15 +51,31 @@ describe 'Scheduler', ->
           expect(@session.placed).toBeFalsy()
 
     describe 'clearSlot', ->
-      it 'calls back-end to clear slot', ->
-        time = { id: 1 }
-        slot = { id: 11 }
-        @http.expectPATCH("/api/schedules/#{@scheduleId}",
-          { id: @scheduleId, change:
-            { type: 'sessionRemove', data: {timeId: time.id, slotId: slot.id } }
-          }
-        ).respond(200, { id: @scheduleId, done: true })
+      beforeEach ->
+        @time = { id: 1 }
+        @slot = { id: 11 }
+        @session = { id: 500, placed: true }
+        @patchData = { id: @scheduleId, change: { type: 'sessionRemove', \
+          data: {timeId: @time.id, slotId: @slot.id } } }
 
-        @Scheduler.clearSlot time, slot
+      it 'calls back-end to clear slot', ->
+        @http.expectPATCH("/api/schedules/#{@scheduleId}", @patchData)
+             .respond(200, { id: @scheduleId, done: true })
+
+        @Scheduler.clearSlot @time, @slot, @session
         @http.flush()
         expect(@schedule).toBeAngularEqual({ id: @scheduleId, done: true })
+
+      describe 'when success', ->
+        it 'sets session as not placed', ->
+          @http.whenPATCH("/api/schedules/#{@scheduleId}", @patchData).respond(200)
+          @Scheduler.clearSlot @time, @slot, @session
+          @http.flush()
+          expect(@session.placed).toBeFalsy()
+
+      describe 'when failed', ->
+        it 'leaves session as placed', ->
+          @http.whenPATCH("/api/schedules/#{@scheduleId}", @patchData).respond(400)
+          @Scheduler.clearSlot @time, @slot, @session
+          @http.flush()
+          expect(@session.placed).toBeTruthy()

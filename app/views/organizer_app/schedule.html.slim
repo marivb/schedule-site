@@ -26,4 +26,4 @@
             rowspan='{{sessionFor(time.slots[0].sessionId).timeSlotSpan}}'
           ]
             | {{sessionFor(time.slots[0].sessionId).title}}
-            a.btn-xs.btn-link ng-click='clear(time)' Remove
+            a.btn-xs.btn-link ng-click='clear(time, sessionFor(time.slots[0].sessionId))' Remove
