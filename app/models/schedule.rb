@@ -29,10 +29,16 @@ class Schedule
     raise 'Cannot build full schedule'
   end
 
+  def add_slot_column
+    times.each do |time|
+      time.slots.build type: Slot::TYPES.BLANK
+    end
+  end
+
   def add_session first_slot, session
-    span = session.time_slot_span
-    available_slots = times_for(first_slot.time, span).collect { |t| t.slots[0] }.select(&:blank?)
-    if available_slots.size < span
+    session_span = session.time_slot_span
+    available_slots = slots_after(first_slot, session_span).select(&:blank?)
+    if available_slots.size < session_span
       first_slot.invalidate
     else
       available_slots.first.add_session(session)
@@ -45,17 +51,17 @@ class Schedule
 
   def clear first_slot
     session_span = first_slot.session.time_slot_span
-    slots = times_for(first_slot.time, session_span).collect { |t| t.slots[0] }
-    slots.each do |slot|
+    slots_after(first_slot, session_span).each do |slot|
       slot.clear
     end
   end
 
   private
 
-  def times_for time, size
-    start = times.find_index(time)
-    finish = start + size
-    times[start...finish]
+  def slots_after slot, size
+    time_start = times.find_index(slot.time)
+    time_finish = time_start + size
+    slot_index = slot.time.slots.find_index(slot)
+    times[time_start...time_finish].collect { |t| t.slots[slot_index] }
   end
 end

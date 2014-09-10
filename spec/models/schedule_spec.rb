@@ -34,6 +34,14 @@ describe Schedule do
     end
   end
 
+  describe 'add_slot_column' do
+    it 'adds a slot to all times' do
+      schedule = Schedule.build_full start_time: 9.hours, end_time: 11.hours, slot_interval: 30
+      schedule.add_slot_column
+      expect(schedule.times.collect {|t| t.slots.size}).to eq([2, 2, 2, 2])
+    end
+  end
+
   describe 'add_session' do
     before :each do
       @schedule = Schedule.build_full start_time: 9.hours, end_time: 11.hours, slot_interval: 30
@@ -105,6 +113,27 @@ describe Schedule do
         expect(@slot.type).to eq('invalid')
       end
     end
+
+    context 'session spanning two times on second column' do
+      before :each do
+        @schedule.add_slot_column
+        @slot = @schedule.times[0].slots[1]
+        @session.duration = 60
+        @schedule.add_session @slot, @session
+      end
+
+      it 'changes first slot to session' do
+        expect(@slot).to be_session
+      end
+
+      it 'changes second slot to cont' do
+        expect(@schedule.times[1].slots[1]).to be_cont
+      end
+
+      it 'does not change third slot' do
+        expect(@schedule.times[2].slots[1]).to be_blank
+      end
+    end
   end
 
   describe 'clear' do
@@ -153,6 +182,24 @@ describe Schedule do
             @schedule.clear @schedule.times[1].slots[0]
           }.to raise_error
         end
+      end
+    end
+
+    context 'session spanning two times on second column' do
+      before :each do
+        @schedule.add_slot_column
+        @slot = @schedule.times[0].slots[1]
+        @session.duration = 60
+        @schedule.add_session @slot, @session
+        @schedule.clear @slot
+      end
+
+      it 'clears the slot' do
+        expect(@slot).to be_blank
+      end
+
+      it 'clears the second slot' do
+        expect(@schedule.times[1].slots[1]).to be_blank
       end
     end
   end
