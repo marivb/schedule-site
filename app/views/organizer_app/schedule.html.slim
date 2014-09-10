@@ -21,9 +21,4 @@
 
           td ng-switch-when='blank' schedule-blank-slot=true session-add='addSessionToTime(time, session)' time='time' sessions='sessions'
 
-          td [
-            ng-switch-when='session'
-            rowspan='{{sessionFor(time.slots[0].sessionId).timeSlotSpan}}'
-          ]
-            | {{sessionFor(time.slots[0].sessionId).title}}
-            a.btn-xs.btn-link ng-click='clear(time, sessionFor(time.slots[0].sessionId))' Remove
+          td ng-switch-when='session' schedule-session-slot=true session-remove='clear(time, session)' time='time' session='sessionFor(time.slots[0].sessionId)'

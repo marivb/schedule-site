@@ -1,4 +1,11 @@
-module = angular.module('organizer.blankSlot', [])
+module = angular.module('organizer.slots', [])
+
+module.directive 'scheduleSessionSlot', ->
+  restrict: 'A'
+  templateUrl: '<%= asset_path('organizer_app/session_slot.html') %>'
+  scope: { clear: '&sessionRemove', time: '=', session: '=' }
+  link: ($scope, element, attributes) ->
+    element.attr('rowspan', $scope.session.timeSlotSpan)
 
 module.directive 'scheduleBlankSlot', ->
     restrict: 'A'
