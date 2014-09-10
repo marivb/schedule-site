@@ -20,4 +20,8 @@ describe SessionSerializer do
   it 'contains timeSlotSpan as an integer' do
     expect(@json).to match(/"timeSlotSpan":\d+/)
   end
+
+  it 'contains placed as a boolean' do
+    expect(@json).to match(/"placed":false/)
+  end
 end

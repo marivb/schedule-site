@@ -1,5 +1,5 @@
 class SessionSerializer < ActiveModel::Serializer
-  attributes :id, :title, :duration, :timeSlotSpan
+  attributes :id, :title, :duration, :timeSlotSpan, :placed
 
   def id
     object.id.to_s
@@ -7,5 +7,9 @@ class SessionSerializer < ActiveModel::Serializer
 
   def timeSlotSpan
     object.time_slot_span
+  end
+
+  def placed
+    object.placed?
   end
 end

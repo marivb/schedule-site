@@ -4,7 +4,7 @@ span ng-show='time.editting'
     input.form-control [
       ng-model='sessionToAdd' type='text' required=true
       focus-on='time.editting'
-      typeahead='session as session.title for session in sessions | filter:{title:$viewValue}'
+      typeahead='session as session.title for session in sessions | filter:{title:$viewValue, placed:false}'
       typeahead-editable='false'
     ]
     button.btn.btn-primary.btn-s type='submit' ng-disabled='form.$invalid' OK
