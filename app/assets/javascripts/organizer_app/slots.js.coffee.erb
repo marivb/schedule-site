@@ -1,30 +1,38 @@
 module = angular.module('organizer.slots', [])
 
-module.directive 'scheduleSessionSlot', ->
-  restrict: 'A'
-  templateUrl: '<%= asset_path('organizer_app/session_slot.html') %>'
-  scope: { clear: '&sessionRemove', time: '=', session: '=' }
-  link: ($scope, element, attributes) ->
-    element.attr('rowspan', $scope.session.timeSlotSpan)
-
-module.directive 'scheduleBlankSlot', ->
+module.directive 'scheduleSlot', [
+  'Sessions', 'Editor', 'Scheduler',
+  (Sessions, Editor, Scheduler) ->
     restrict: 'A'
-    templateUrl: '<%= asset_path('organizer_app/blank_slot.html') %>'
-    scope: { submit: '&sessionAdd', time: '=', sessions: '=' }
+    templateUrl: '<%= asset_path('organizer_app/slot.html') %>'
+    scope: { time: '=', slot: '=', session: '=', sessions: '=' }
+    link: ($scope, element, attributes) ->
+      if $scope.slot.type == 'session'
+        $scope.$watch 'session', ->
+          element.attr('rowspan', $scope.session.timeSlotSpan) if $scope.session?
+
     controller: [
-      'Editor', '$scope',
-      (Editor, $scope) ->
+      '$scope',
+      ($scope) ->
         $scope.control = {
+          remove: ->
+            Scheduler.clearSlot $scope.time, $scope.slot, $scope.session
+            Editor.clear()
+
+          add: (session) ->
+            Scheduler.addSession $scope.time, $scope.slot, session
+
           edit: ->
-            Editor.edit($scope.time)
+            Editor.edit($scope.slot)
+
           reset: (form) ->
             $scope.sessionToAdd = ''
             form.$setPristine()
             Editor.clear()
         }
-
         return
     ]
+]
 
 module.directive 'focusOn', ($timeout) ->
   restrict: 'A'

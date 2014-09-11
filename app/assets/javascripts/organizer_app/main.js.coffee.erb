@@ -12,10 +12,10 @@ module.config [
 module.service 'Editor', [
   ->
     currentlyEditting = undefined
-    @edit = (time) ->
+    @edit = (slot) ->
       currentlyEditting.editting = false if currentlyEditting
-      currentlyEditting = time
-      time.editting = true
+      currentlyEditting = slot
+      slot.editting = true
     @clear = ->
       currentlyEditting.editting = false if currentlyEditting
       currentlyEditting = undefined
@@ -31,12 +31,6 @@ module.controller 'OrganizeScheduleCtrl', [
       Sessions.load (sessions) -> $scope.sessions = sessions
       $scope.editor = Editor
 
-    $scope.sessionFor = (sessionId) ->
-      Sessions.find(sessionId)
-    $scope.addSessionToTime = (time, session) ->
-      Scheduler.addSession time, time.slots[0], session
-      Editor.clear()
-    $scope.clear = (time, session) ->
-      Scheduler.clearSlot time, time.slots[0], session
-      Editor.clear()
+    $scope.sessionFor = (slot) ->
+      Sessions.find(slot.sessionId) if slot.type == 'session'
 ]

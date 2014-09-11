@@ -5,22 +5,22 @@ module.service 'Sessions', [
   ($resource, scheduleId, $filter) ->
     Session = $resource('/api/schedules/:scheduleId/sessions/:sessionId',
                         {scheduleId: '@scheduleId', sessionId: '@id'})
-    all = []
+    @all = []
     @load = (callback) ->
       Session.query scheduleId: scheduleId, (sessions) =>
         for session in sessions
-          all.push session
-        callback(all)
+          @all.push session
+        callback(@all)
 
     @build = ->
       new Session scheduleId: scheduleId
 
     @create = (newSession) ->
       newSession.$save =>
-        all.push newSession
+        @all.push newSession
 
     @find = (id) ->
-      $filter('filter')(all, {id: id})[0]
+      $filter('filter')(@all, {id: id})[0]
 
     return
 ]

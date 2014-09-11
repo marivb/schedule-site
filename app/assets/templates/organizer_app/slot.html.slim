@@ -1,0 +1,22 @@
+span ng-switch=true on='slot.type'
+  span ng-switch-when='session'
+    | {{session.title}}
+    a.btn-xs.btn-link ng-click='control.remove()' Remove
+
+  span ng-switch-when='blank'
+    / Displaying session input
+    span ng-show='slot.editting'
+      form.form-inline name='form' novalidate=true ng-submit='control.add(sessionToAdd)'
+        input.form-control [
+          ng-model='sessionToAdd' type='text' required=true
+          focus-on='slot.editting'
+          typeahead='session as session.title for session in sessions | filter:{title:$viewValue, placed:false}'
+          typeahead-editable='false'
+        ]
+        button.btn.btn-primary.btn-s type='submit' ng-disabled='form.$invalid' OK
+        button.btn.btn-link.btn-xs type='button' ng-click='control.reset(form)' Cancel
+
+    / Displaying <none> Add
+    span ng-hide='slot.editting'
+      | &lt;none&gt;
+      a.btn-xs.btn-link ng-click='control.edit()' Add

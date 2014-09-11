@@ -15,10 +15,8 @@
           td.col-sm-1 Time
           td Room
       tbody
-        tr ng-repeat='time in schedule.times' ng-switch=true on='time.slots[0].type'
+        tr ng-repeat='time in schedule.times'
           td
             | {{time.start}}
 
-          td ng-switch-when='blank' schedule-blank-slot=true session-add='addSessionToTime(time, session)' time='time' sessions='sessions'
-
-          td ng-switch-when='session' schedule-session-slot=true session-remove='clear(time, session)' time='time' session='sessionFor(time.slots[0].sessionId)'
+          td ng-repeat="slot in time.slots | filter:{type:'!cont'}" schedule-slot=true time='time' slot='slot' session='sessionFor(slot)' sessions='sessions'
