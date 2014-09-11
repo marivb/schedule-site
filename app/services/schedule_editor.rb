@@ -23,7 +23,7 @@ class ScheduleEditor
 
   def process_room_add(room)
     @schedule.add_slot_column
-    @dependencies << @schedule.rooms.build(name: room[:name])
+    @dependencies << @schedule.rooms.build(name: room[:name], order: @schedule.rooms.size)
   end
 
   def process_addition(addition)

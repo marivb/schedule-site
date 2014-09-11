@@ -101,7 +101,7 @@ describe ScheduleEditor do
 
   context 'roomAdd' do
     before :each do
-      @editor.process type: 'roomAdd', data: {}
+      @editor.process type: 'roomAdd', data: {name: 'Room'}
     end
 
     describe 'process' do
@@ -111,6 +111,14 @@ describe ScheduleEditor do
 
       it 'adds a new room to schedule' do
         expect(@schedule.rooms[1]).to_not be_nil
+      end
+
+      it 'adds a room with given name' do
+        expect(@schedule.rooms[1].name).to eq('Room')
+      end
+
+      it 'adds a room with order' do
+        expect(@schedule.rooms[1].order).to eq(1)
       end
     end
 
