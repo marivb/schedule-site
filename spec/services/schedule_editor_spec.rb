@@ -108,9 +108,17 @@ describe ScheduleEditor do
       it 'adds a new column to schedule' do
         expect(@schedule.times[0].slots.size).to eq(2)
       end
+
+      it 'adds a new room to schedule' do
+        expect(@schedule.rooms[1]).to_not be_nil
+      end
     end
 
     describe 'save' do
+      before :each do
+        @schedule.rooms[0].save!
+      end
+
       it 'returns true' do
         expect(@editor.save).to eq(true)
       end

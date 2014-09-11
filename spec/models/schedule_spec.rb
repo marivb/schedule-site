@@ -1,50 +1,86 @@
 require 'rails_helper'
 
 describe Schedule do
+  before :each do
+    @schedule = Schedule.build_empty start_time: 9.hours, end_time: 11.hours, slot_interval: 30
+  end
+
   describe 'with ScheduleTime type' do
     it 'allows creating and retrieving by ActiveSupport::Duration' do
-      schedule = Schedule.create start_time: 9.hours
+      @schedule.save!
 
-      expect(Schedule.where(start_time: 9.hours).first).to eq(schedule)
+      expect(Schedule.where(start_time: 9.hours).first).to eq(@schedule)
     end
   end
 
-  describe 'self.build_full' do
+  describe 'self.build_empty' do
     context 'with required attributes' do
-      before :each do
-        @schedule = Schedule.build_full start_time: 9.hours, end_time: 11.hours, slot_interval: 30
-      end
-
       it 'creates times for each interval' do
         expect(@schedule.times.collect(&:start)).to eq(['09:00', '09:30', '10:00', '10:30'])
       end
 
-      it 'creates blank slots for each time' do
-        slot_types = @schedule.times.collect { |time| time.slots.collect(&:type) }
-        expect(slot_types).to eq([[Slot::TYPES.BLANK]] * 4)
+      it 'no slots are present' do
+        slot_counts = @schedule.times.collect { |time| time.slots.size }
+        expect(slot_counts).to eq([0, 0, 0, 0])
       end
     end
 
     context 'without required attributes' do
       it 'raises error' do
         expect {
-          Schedule.build_full
+          Schedule.build_empty
         }.to raise_error('Cannot build full schedule')
+      end
+    end
+  end
+
+  describe 'validations' do
+    context 'no rooms and no slots' do
+      it 'is valid' do
+        expect(@schedule).to be_valid
+      end
+    end
+
+    context 'number of rooms matches number of columns' do
+      it 'is valid' do
+        @schedule.rooms.build name: 'Room 1'
+        @schedule.add_slot_column
+        expect(@schedule).to be_valid
+      end
+    end
+
+    context 'number of rooms less than number of columns' do
+      it 'is not valid' do
+        @schedule.add_slot_column
+        expect(@schedule).to_not be_valid
+      end
+    end
+
+    context 'number of rooms more than number of columns' do
+      it 'is not valid' do
+        @schedule.rooms.build name: 'Room 1'
+        expect(@schedule).to_not be_valid
+      end
+    end
+
+    context 'uneven number of slots in times' do
+      it 'is not valid' do
+        @schedule.times[1].slots.build type: Slot::TYPES.BLANK
+        expect(@schedule).to_not be_valid
       end
     end
   end
 
   describe 'add_slot_column' do
     it 'adds a slot to all times' do
-      schedule = Schedule.build_full start_time: 9.hours, end_time: 11.hours, slot_interval: 30
-      schedule.add_slot_column
-      expect(schedule.times.collect {|t| t.slots.size}).to eq([2, 2, 2, 2])
+      @schedule.add_slot_column
+      expect(@schedule.times.collect {|t| t.slots.size}).to eq([1, 1, 1, 1])
     end
   end
 
   describe 'add_session' do
     before :each do
-      @schedule = Schedule.build_full start_time: 9.hours, end_time: 11.hours, slot_interval: 30
+      @schedule.add_slot_column
       @session = FactoryGirl.build :session, schedule: @schedule
       @slot = @schedule.times[0].slots[0]
     end
@@ -138,7 +174,7 @@ describe Schedule do
 
   describe 'clear' do
     before :each do
-      @schedule = Schedule.build_full start_time: 9.hours, end_time: 11.hours, slot_interval: 30
+      @schedule.add_slot_column
       @session = FactoryGirl.build :session, schedule: @schedule
       allow(Session).to receive(:find).with(@session.id).and_return(@session)
       @slot = @schedule.times[0].slots[0]

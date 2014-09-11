@@ -58,6 +58,7 @@ describe 'Scheduler', ->
         @patchData = { id: @scheduleId, change: { type: 'sessionRemove', \
           data: {timeId: @time.id, slotId: @slot.id } } }
 
+
       it 'calls back-end to clear slot', ->
         @http.expectPATCH("/api/schedules/#{@scheduleId}", @patchData)
              .respond(200, { id: @scheduleId, done: true })
@@ -66,12 +67,14 @@ describe 'Scheduler', ->
         @http.flush()
         expect(@schedule).toBeAngularEqual({ id: @scheduleId, done: true })
 
+
       describe 'when success', ->
         it 'sets session as not placed', ->
           @http.whenPATCH("/api/schedules/#{@scheduleId}", @patchData).respond(200)
           @Scheduler.clearSlot @time, @slot, @session
           @http.flush()
           expect(@session.placed).toBeFalsy()
+
 
       describe 'when failed', ->
         it 'leaves session as placed', ->
@@ -80,9 +83,10 @@ describe 'Scheduler', ->
           @http.flush()
           expect(@session.placed).toBeTruthy()
 
+
     describe 'addRoom', ->
       beforeEach ->
-        @patchData = { id: @scheduleId, change: { type: 'roomAdd' } }
+        @patchData = { id: @scheduleId, change: { type: 'roomAdd', data: { name: 'Room' } } }
 
       it 'calls back-end to add room', ->
         @http.expectPATCH("/api/schedules/#{@scheduleId}", @patchData)

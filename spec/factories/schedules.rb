@@ -5,6 +5,23 @@ FactoryGirl.define do
     end_time       10.hours
     slot_interval  15
 
-    initialize_with { Schedule.build_full(attributes) }
+    ignore do
+      room_count   1
+    end
+
+    initialize_with { Schedule.build_empty(attributes) }
+
+    after(:build) do |object, evaluator|
+      evaluator.room_count.times do |i|
+        object.rooms.build name: "Room #{i}"
+        object.add_slot_column
+      end
+    end
+
+    after(:create) do |object|
+      object.rooms.each do |room|
+        room.save!
+      end
+    end
   end
 end

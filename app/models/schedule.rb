@@ -9,24 +9,32 @@ class Schedule
   field :slot_interval, type: Integer
 
   has_many :sessions, validate: false
+  has_many :rooms, validate: false
   embeds_many :times, class_name: 'TimeRow', cascade_callbacks: true
 
-  def self.build_full options={}
-    Schedule.new(options).tap do |schedule|
-      schedule.reset
-    end
+  validate :all_times_match_room_count
+  validate :all_times_same_slot_count
+
+  def all_times_match_room_count
+    errors.add(:all_times, 'has too many slots') if rooms.size < times.first.slots.size
+    errors.add(:all_times, 'has not enough slots') if rooms.size > times.first.slots.size
   end
 
-  def reset
-    times.delete_all
+  def all_times_same_slot_count
+    same_count = times.collect { |t| t.slots.size }.uniq.size == 1
+    errors.add(:all_times, 'must have same slot count') unless same_count
+  end
 
-    start_time.until(end_time, slot_interval).map do |time|
-      time = times.build start_delta: time
-      time.slots.build type: Slot::TYPES.BLANK
+  def self.build_empty options={}
+    begin
+      Schedule.new(options).tap do |schedule|
+        schedule.start_time.until(schedule.end_time, schedule.slot_interval).map do |time|
+          time = schedule.times.build start_delta: time
+        end
+      end
+    rescue
+      raise 'Cannot build full schedule'
     end
-    self
-  rescue
-    raise 'Cannot build full schedule'
   end
 
   def add_slot_column
