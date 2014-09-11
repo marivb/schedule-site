@@ -9,6 +9,8 @@ class ScheduleEditor
       process_addition(change[:data])
     when 'sessionRemove'
       process_deletion(change[:data])
+    when 'roomAdd'
+      @schedule.add_slot_column
     end
   end
 
@@ -28,7 +30,7 @@ class ScheduleEditor
   end
 
   def save
-    @schedule.save && @session.save
+    @schedule.save && (@session.nil? || @session.save)
   end
 
   private

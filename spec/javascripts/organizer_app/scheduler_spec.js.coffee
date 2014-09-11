@@ -79,3 +79,15 @@ describe 'Scheduler', ->
           @Scheduler.clearSlot @time, @slot, @session
           @http.flush()
           expect(@session.placed).toBeTruthy()
+
+    describe 'addRoom', ->
+      beforeEach ->
+        @patchData = { id: @scheduleId, change: { type: 'roomAdd' } }
+
+      it 'calls back-end to add room', ->
+        @http.expectPATCH("/api/schedules/#{@scheduleId}", @patchData)
+             .respond(200, {id: @scheduleId, done: true})
+        @Scheduler.addRoom()
+        @http.flush()
+
+        expect(@schedule).toBeAngularEqual({id: @scheduleId, done: true})

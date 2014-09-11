@@ -99,6 +99,29 @@ describe ScheduleEditor do
     end
   end
 
+  context 'roomAdd' do
+    before :each do
+      @editor.process type: 'roomAdd', data: {}
+    end
+
+    describe 'process' do
+      it 'adds a new column to schedule' do
+        expect(@schedule.times[0].slots.size).to eq(2)
+      end
+    end
+
+    describe 'save' do
+      it 'returns true' do
+        expect(@editor.save).to eq(true)
+      end
+
+      it 'persists schedule' do
+        @editor.save
+        expect(@schedule).to be_persisted
+      end
+    end
+  end
+
   context 'invalid change' do
     before :each do
       time = @schedule.times[0]

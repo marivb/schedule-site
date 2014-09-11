@@ -33,4 +33,7 @@ module.controller 'OrganizeScheduleCtrl', [
 
     $scope.sessionFor = (slot) ->
       Sessions.find(slot.sessionId) if slot.type == 'session'
+
+    $scope.addRoom = ->
+      Scheduler.addRoom()
 ]

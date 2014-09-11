@@ -6,6 +6,10 @@ module.service 'Scheduler', [
     Schedule = $resource('/api/schedules/:id', {}, update: {method: 'PATCH', params: {id: '@id'} })
     schedule = undefined
 
+    doChange = (type, data, success) ->
+      schedule.change = { type: type, data: data }
+      schedule.$update success
+
     @load = (callback) ->
       Schedule.get id: scheduleId, (data) ->
         schedule = data
@@ -13,15 +17,16 @@ module.service 'Scheduler', [
 
     @addSession = (time, slot, session) ->
       data = { timeId: time.id, slotId: slot.id, sessionId: session.id }
-      schedule.change = { type: 'sessionAdd', data: data }
-      schedule.$update ->
+      doChange 'sessionAdd', data, ->
         session.placed = true
 
     @clearSlot = (time, slot, session) ->
       data = { timeId: time.id, slotId: slot.id }
-      schedule.change = { type: 'sessionRemove', data: data }
-      schedule.$update ->
+      doChange 'sessionRemove', data, ->
         session.placed = false
+
+    @addRoom = ->
+      doChange 'roomAdd'
 
     return
 ]
