@@ -1,8 +1,8 @@
 module = angular.module('organizer.scheduler', [])
 
 module.service 'Scheduler', [
-  '$resource', 'scheduleId', '$log'
-  ($resource, scheduleId, $log) ->
+  '$resource', 'scheduleId',
+  ($resource, scheduleId) ->
     Schedule = $resource('/api/schedules/:id', {}, update: {method: 'PATCH', params: {id: '@id'} })
     schedule = undefined
 
