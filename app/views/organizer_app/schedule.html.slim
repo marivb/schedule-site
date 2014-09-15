@@ -14,11 +14,20 @@
         tr
           td.col-sm-1 Time
 
-          td ng-repeat='room in rooms'
+          td ng-repeat='room in schedule.rooms'
             | {{room.name}}
 
           td
-            a.btn-link.btn-lg ng-click='addRoom()' +
+            span ng-show='newRoom.editting'
+              form.form-inline name='form' novalidate=true ng-submit='addRoom()'
+                input.form-control [
+                  ng-model='newRoom.name' type='text' required=true
+                  focus-on='newRoom.editting'
+                ]
+                button.btn.btn-primary.btn-s type='submit' ng-disabled='form.$invalid' OK
+                button.btn.btn-link.btn-xs type='button' ng-click='reset(form)' Cancel
+            span ng-hide='newRoom.editting'
+              a.btn-link.btn-lg ng-click='newRoom.editting = true' +
       tbody
         tr ng-repeat='time in schedule.times'
           td

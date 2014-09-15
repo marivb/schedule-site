@@ -15,4 +15,8 @@ describe ScheduleSerializer do
   it 'contains times as array' do
     expect(@json).to match(/"times":\[{"id":"#{@schedule.times[0].id}".+\]/)
   end
+
+  it 'contains rooms as array' do
+    expect(@json).to match(/"rooms":\[{"id":"#{@schedule.rooms[0].id}".+\]/)
+  end
 end

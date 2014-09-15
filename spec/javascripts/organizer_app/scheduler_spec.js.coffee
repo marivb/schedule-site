@@ -86,12 +86,12 @@ describe 'Scheduler', ->
 
     describe 'addRoom', ->
       beforeEach ->
-        @patchData = { id: @scheduleId, change: { type: 'roomAdd', data: { name: 'Room' } } }
+        @patchData = { id: @scheduleId, change: { type: 'roomAdd', data: { name: 'Test Room' } } }
 
       it 'calls back-end to add room', ->
         @http.expectPATCH("/api/schedules/#{@scheduleId}", @patchData)
              .respond(200, {id: @scheduleId, done: true})
-        @Scheduler.addRoom()
+        @Scheduler.addRoom('Test Room')
         @http.flush()
 
         expect(@schedule).toBeAngularEqual({id: @scheduleId, done: true})

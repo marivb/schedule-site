@@ -25,8 +25,8 @@ module.service 'Scheduler', [
       doChange 'sessionRemove', data, ->
         session.placed = false
 
-    @addRoom = ->
-      doChange 'roomAdd', { name: 'Room' }
+    @addRoom = (name) ->
+      doChange 'roomAdd', { name: name }
 
     return
 ]
