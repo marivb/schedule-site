@@ -13,7 +13,10 @@
       thead
         tr
           td.col-sm-1 Time
-          td Room
+
+          td ng-repeat='room in rooms'
+            | {{room.name}}
+
           td
             a.btn-link.btn-lg ng-click='addRoom()' +
       tbody

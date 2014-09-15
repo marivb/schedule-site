@@ -1,6 +1,6 @@
 module = angular.module('organizer.main',
                        ['organizer.sessions', 'organizer.scheduler', 'organizer.slots',
-                        'organizer.sidebar', 'ui.bootstrap', 'ngResource'])
+                        'organizer.rooms', 'organizer.sidebar', 'ui.bootstrap', 'ngResource'])
 
 module.config [
   '$httpProvider',
@@ -24,11 +24,12 @@ module.service 'Editor', [
 ]
 
 module.controller 'OrganizeScheduleCtrl', [
-  '$scope', 'Scheduler', 'Sessions', 'Editor'
-  ($scope, Scheduler, Sessions, Editor) ->
+  '$scope', 'Scheduler', 'Sessions', 'Editor', 'Rooms'
+  ($scope, Scheduler, Sessions, Editor, Rooms) ->
     $scope.loadSchedule = ->
       Scheduler.load (schedule) -> $scope.schedule = schedule
       Sessions.load (sessions) -> $scope.sessions = sessions
+      Rooms.load (rooms) -> $scope.rooms = rooms
       $scope.editor = Editor
 
     $scope.sessionFor = (slot) ->
